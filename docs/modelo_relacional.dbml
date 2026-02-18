@@ -1,0 +1,102 @@
+//Estudiante: Cristina Sabillón
+//Numero Cuenta: 22351004
+
+table usuario{
+  id varchar(30) [primary key]
+  nombre varchar(300)
+  apellido varchar (300)
+  correo_electronico varchar (300)
+  contrasenia varchar(300)
+  fecha_registro long
+  salario_mensual_base double
+  estado_usuario bool
+}
+
+table presupuesto{
+  id varchar(30) [primary key]
+  id_transaccion varchar (30)
+  usuario_propietario varchar (300)
+  nombre_descriptivo varchar (300)
+  anio_inicio long
+  mes_inicio long
+  anio_fin long
+  mes_fin long
+  total_ingreso double
+  total_gasto double
+  total_ahorro double
+  fecha_hora_creacion long
+  estado_presupuesto bool //activo/cerrado/borrador
+}
+
+table categorias{
+  id_categorias varchar (30) [primary key]
+  nombre varchar (300)
+  descripcion varchar (600)
+  tipo_categoria varchar (300) //(ingreso/gasto/ahorro)
+
+}
+
+table subcategorias{
+  id_subcategorias varchar (30) [primary key]
+  id_obligacion varchar (30) [primary key]
+  id_categorias  varchar (30)
+  nombre varchar (300)
+  descripcion varchar (600)
+  es_activo bool
+  es_subcategoria_por_defecto bool
+
+}
+
+table presupuesto_detalle{
+  id varchar (30) [primary key]
+  id_presupuesto varchar (30)
+  id_subcategorias vachar (30)
+  monto_mensual double
+  observacion_monto varchar (300)
+}
+
+table obligacion_fija{
+  id varchar (30) [primary key]
+  id_usuario varchar (30) 
+  id_subcategoria varchar (30)
+  nombre varchar (300)
+  descripcion varchar (400)
+  monto_fijo_mensual double
+  dia_del_mes long 
+  esta_vigente bool
+  fecha_inicio long
+  fecha_finalizacion long
+}
+
+table transaccion { 
+  id_transaccion varchar (30) [primary key]
+  id_usuario varchar (30)
+  id_presupuesto_detalle varchar (30)
+  anio_transaccion long
+  mes_transaccion long
+  id_obligacion varchar (30)
+  tipo_transaccion varchar (300) //(efectivo/tarjeta_debito/tarjeta_credito/transferencia)
+  numero_factura int
+  fecha_hora_registro long
+}
+
+table obligacion_transaccion{
+  id_transaccion varchar (30) [primary key]
+  id_obligacion varchar (30)
+}
+
+Ref: "categorias"."id_categorias" < "subcategorias"."id_categorias"
+
+Ref: "presupuesto"."id" < "presupuesto_detalle"."id_presupuesto"
+
+Ref: "subcategorias"."id_subcategorias" < "presupuesto_detalle"."id_subcategorias"
+
+Ref: "usuario"."id" < "presupuesto"."usuario_propietario"
+
+Ref: "obligacion_fija"."id" < "obligacion_transaccion"."id_obligacion"
+
+Ref: "transaccion"."id_transaccion" < "obligacion_transaccion"."id_transaccion"
+
+Ref: "obligacion_fija"."id" < "subcategorias"."id_subcategorias"
+
+Ref: "presupuesto_detalle"."id" < "transaccion"."id_presupuesto_detalle"
