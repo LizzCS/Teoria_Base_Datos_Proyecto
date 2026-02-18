@@ -38,7 +38,6 @@ table categorias{
 
 table subcategorias{
   id_subcategorias varchar (30) [primary key]
-  id_obligacion varchar (30) [primary key]
   id_categorias  varchar (30)
   nombre varchar (300)
   descripcion varchar (600)
@@ -97,6 +96,6 @@ Ref: "obligacion_fija"."id" < "obligacion_transaccion"."id_obligacion"
 
 Ref: "transaccion"."id_transaccion" < "obligacion_transaccion"."id_transaccion"
 
-Ref: "obligacion_fija"."id" < "subcategorias"."id_subcategorias"
-
 Ref: "presupuesto_detalle"."id" < "transaccion"."id_presupuesto_detalle"
+
+Ref: "subcategorias"."id_subcategorias" < "obligacion_fija"."id_subcategoria"
