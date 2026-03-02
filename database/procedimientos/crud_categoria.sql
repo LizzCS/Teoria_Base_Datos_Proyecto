@@ -1,4 +1,4 @@
-USE proyecto_tbd;
+USE Sistema_bancario;
 GO
 
 CREATE PROCEDURE sp_insertar_categoria
