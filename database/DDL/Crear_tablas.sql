@@ -1,6 +1,6 @@
-USE proyecto_tbd;
+USE Sistema_bancario;
+GO
 
--- Crear tablas
 
 CREATE TABLE usuario (
   usuario_id INT PRIMARY KEY IDENTITY (1,1),
@@ -51,7 +51,7 @@ CREATE TABLE subcategoria(
 );
 
 CREATE TABLE presupuesto_detalle (
-  id_detalle INT PRIMARY KEY IDENTITY (1,1),
+  id_presupuesto_detalle INT PRIMARY KEY IDENTITY (1,1),
   id_presupuesto INT NOT NULL,
   FOREIGN KEY (id_presupuesto) REFERENCES presupuesto(presupuesto_id),
   id_subcategoria INT NOT NULL,
@@ -75,10 +75,8 @@ CREATE TABLE obligacion_fija (
 
 CREATE TABLE transaccion (
     id_transaccion INT PRIMARY KEY IDENTITY (1,1),
-    id_subcategoria INT,
-    id_obligacion_fija INT,
     id_presupuesto_detalle INT NOT NULL,
-    FOREIGN KEY (id_presupuesto_detalle) REFERENCES presupuesto_detalle(id_detalle),
+    FOREIGN KEY (id_presupuesto_detalle) REFERENCES presupuesto_detalle(id_presupuesto_detalle),
     monto DECIMAL(12, 2) NOT NULL CHECK (monto >= 0),
     metodo_pago VARCHAR(50) NOT NULL CHECK (metodo_pago IN ('efectivo', 'tarjeta debito', 'tarjeta credito', 'transferencia')),
     fecha DATETIME NOT NULL DEFAULT GETDATE(),
