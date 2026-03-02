@@ -2,74 +2,101 @@
 //Numero Cuenta: 22351004
 
 table usuario{
-  id varchar(30) [primary key]
+  id int [primary key]
   nombre varchar(300)
   apellido varchar (300)
   correo_electronico varchar (300)
   contrasenia varchar(300)
-  fecha_registro long
-  salario_mensual_base double
-  estado_usuario bool
+  fecha_registro datetime
+  salario_mensual_base decimal(18,2)
+  estado_usuario bit
+
+  creado_por int
+  modificado_por int
+  creado_en DATETIME
+  modificado_en DATETIME
 }
 
 table presupuesto{
-  id varchar(30) [primary key]
-  id_transaccion varchar (30)
+  id int [primary key]
   usuario_propietario varchar (300)
   nombre_descriptivo varchar (300)
-  anio_inicio long
-  mes_inicio long
-  anio_fin long
-  mes_fin long
-  total_ingreso double
-  total_gasto double
-  total_ahorro double
-  fecha_hora_creacion long
-  estado_presupuesto bool //activo/cerrado/borrador
+  anio_inicio smallint
+  mes_inicio tinyint
+  anio_fin smallint
+  mes_fin tinyint
+  total_ingreso decimal(18,2)
+  total_gasto decimal(18,2)
+  total_ahorro decimal(18,2)
+  fecha_hora_creacion datetime
+  estado_presupuesto varchar(300) //activo/cerrado/borrador
+
+  creado_por int
+  modificado_por int
+  creado_en DATETIME
+  modificado_en DATETIME
+
 }
 
 table categorias{
-  id_categorias varchar (30) [primary key]
+  id_categorias int [primary key]
   nombre varchar (300)
   descripcion varchar (600)
   tipo_categoria varchar (300) //(ingreso/gasto/ahorro)
 
+  creado_por int
+  modificado_por int
+  creado_en DATETIME
+  modificado_en DATETIME
 }
 
 table subcategorias{
-  id_subcategorias varchar (30) [primary key]
-  id_categorias  varchar (30)
+  id_subcategorias int [primary key]
+  id_categorias int
   nombre varchar (300)
   descripcion varchar (600)
-  es_activo bool
-  es_subcategoria_por_defecto bool
+  es_activo bit
+  subcategoria_por_defecto bit
 
+  creado_por int
+  modificado_por int
+  creado_en DATETIME
+  modificado_en DATETIME
 }
 
 table presupuesto_detalle{
-  id varchar (30) [primary key]
-  id_presupuesto varchar (30)
-  id_subcategorias vachar (30)
-  monto_mensual double
+  id int [primary key]
+  id_presupuesto int
+  id_subcategorias int
+  monto_mensual decimal(18,2)
   observacion_monto varchar (300)
+
+  creado_por int
+  modificado_por int
+  creado_en DATETIME
+  modificado_en DATETIME
 }
 
 table obligacion_fija{
-  id varchar (30) [primary key]
-  id_usuario varchar (30) 
-  id_subcategoria varchar (30)
+  id int [primary key]
+  id_subcategoria int
   nombre varchar (300)
   descripcion varchar (400)
-  monto_fijo_mensual double
-  dia_del_mes long 
-  esta_vigente bool
-  fecha_inicio long
-  fecha_finalizacion long
+  monto_fijo_mensual decimal(18,2)
+  dia_del_mes tinyint 
+  esta_vigente bit
+  fecha_inicio date
+  fecha_finalizacion date
+
+  creado_por int
+  modificado_por int
+  creado_en DATETIME
+  modificado_en DATETIME
 }
 
 table transaccion { 
-  id_transaccion varchar (30) [primary key]
-  id_usuario varchar (30)
+  id_transaccion int [primary key]
+  id_usuario int
   id_presupuesto_detalle varchar (30)
   anio_transaccion long
   mes_transaccion long
@@ -77,6 +104,11 @@ table transaccion {
   tipo_transaccion varchar (300) //(efectivo/tarjeta_debito/tarjeta_credito/transferencia)
   numero_factura int
   fecha_hora_registro long
+  
+  creado_por int
+  modificado_por int
+  creado_en DATETIME
+  modificado_en DATETIME
 }
 
 table obligacion_transaccion{
@@ -98,4 +130,5 @@ Ref: "transaccion"."id_transaccion" < "obligacion_transaccion"."id_transaccion"
 
 Ref: "presupuesto_detalle"."id" < "transaccion"."id_presupuesto_detalle"
 
+Ref: "subcategorias"."id_subcategorias" < "obligacion_fija"."id_subcategoria"
 Ref: "subcategorias"."id_subcategorias" < "obligacion_fija"."id_subcategoria"
