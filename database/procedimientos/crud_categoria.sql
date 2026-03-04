@@ -22,11 +22,7 @@ CREATE PROCEDURE sp_actualizar_categoria
 	@p_modificado_por INT
 	AS
 	BEGIN
-		IF NOT EXISTS (
-		SELECT 1
-		FROM dbo.categoria c
-		WHERE c.id_categoria = @p_id_categoria
-		)
+		IF NOT EXISTS (SELECT 1 FROM dbo.categoria c WHERE c.id_categoria = @p_id_categoria)
 		BEGIN
 			RAISERROR('La categoría con ID %d no existe.', 16, 1, @p_id_categoria);
 			RETURN;
@@ -45,16 +41,15 @@ GO
 CREATE PROCEDURE sp_eliminar_categoria
 	@p_id_categoria INT
 	AS
-		IF NOT EXISTS(
-		SELECT 1
-				FROM dbo.subcategoria sb
-				WHERE sb.id_categoria = @p_id_categoria
-				AND sb.es_activa = 1
-	)
 	BEGIN 	
+		IF NOT EXISTS (SELECT 1 FROM dbo.categoria c WHERE c.id_categoria = @p_id_categoria)
+		BEGIN
+			RAISERROR('La categoría con ID %d no existe.', 16, 1, @p_id_categoria);
+			RETURN;
+		END
 		DELETE FROM dbo.categoria
 		WHERE id_categoria = @p_id_categoria;
-END
+	END
 GO
 
 -- CONSULTAR
@@ -62,10 +57,15 @@ CREATE PROCEDURE sp_consultar_categoria
 	@p_id_categoria INT
 	AS
 	BEGIN
+		IF NOT EXISTS (SELECT 1 FROM dbo.categoria c WHERE c.id_categoria = @p_id_categoria)
+		BEGIN
+			RAISERROR('La categoría con ID %d no existe.', 16, 1, @p_id_categoria);
+			RETURN;
+		END
 		SELECT id_categoria, nombre, descripcion, tipo_categoria, creado_por, modificado_por, creado_en, modificado_en
 		FROM dbo.categoria
 		WHERE id_categoria = @p_id_categoria;
-END
+	END
 GO
 
 -- LISTAR
@@ -74,7 +74,12 @@ CREATE PROCEDURE sp_listar_categorias
 	@p_tipo_categoria VARCHAR (20)
 	AS
 	BEGIN
-		SELECT DISTINCT c.tipo_categoria, p.usuario_id
+		IF NOT EXISTS (SELECT 1 FROM dbo.usuario WHERE usuario_id = @p_id_usuario)
+		BEGIN
+			RAISERROR('El usuario con ID %d no existe.', 16, 1, @p_id_usuario);
+			RETURN;
+		END
+		SELECT c.tipo_categoria, p.usuario_id
 		FROM categoria c
 		INNER JOIN dbo.subcategoria sb 
 			ON c.id_categoria = sb.id_categoria
