@@ -1,7 +1,7 @@
 USE Sistema_bancario;
 GO
 -- INSERTAR
-CREATE PROCEDURE dbo.sp_insertar_usuario
+CREATE PROCEDURE sp_insertar_usuario
 	@nombre VARCHAR(100),
 	@apellido VARCHAR(100),
 	@correo_electronico VARCHAR(255),
@@ -10,6 +10,16 @@ CREATE PROCEDURE dbo.sp_insertar_usuario
 	@creado_por INT
 AS
 BEGIN
+    IF EXISTS (SELECT 1 FROM usuario WHERE correo_electronico = @correo_electronico)
+    BEGIN
+        RAISERROR('El correo electrónico ya está registrado.', 16, 1);
+        RETURN;
+    END
+    IF (@salario_mensual < 0)
+    BEGIN
+        RAISERROR('El salario mensual no puede ser negativo.', 16, 1);
+        RETURN;
+    END
 	INSERT INTO usuario (nombre, apellido, correo_electronico, contrasena, fecha_registro, salario_mensual, estado_usuario, creado_por,creado_en)
 	VALUES (@nombre, @apellido, @correo_electronico, @contrasena, GETDATE(), @salario_mensual, 1, @creado_por,GETDATE());
 END
@@ -24,6 +34,17 @@ CREATE PROCEDURE sp_actualizar_usuario
     @p_modificado_por INT
 AS
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
+    BEGIN
+        RAISERROR('El usuario no existe.', 16, 1);
+        RETURN;
+    END
+
+    IF EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario AND estado_usuario = 0)
+    BEGIN
+        RAISERROR('No se puede actualizar un usuario inactivo.', 16, 1);
+        RETURN;
+    END
     UPDATE usuario
     SET nombre = @p_nombre,
         apellido = @p_apellido,
@@ -40,6 +61,11 @@ CREATE PROCEDURE sp_eliminar_usuario
     @p_modificado_por INT
 AS
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
+    BEGIN
+        RAISERROR('El usuario no existe.', 16, 1);
+        RETURN;
+    END
     UPDATE usuario
     SET estado_usuario = 0,
         modificado_por = @p_modificado_por,
@@ -53,6 +79,11 @@ CREATE PROCEDURE sp_consultar_usuario
     @p_id_usuario INT
 AS
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
+    BEGIN
+        RAISERROR('El usuario no existe.', 16, 1);
+        RETURN;
+    END
     SELECT usuario_id, nombre, apellido, correo_electronico, contrasena, fecha_registro, salario_mensual, estado_usuario, creado_por, modificado_por ,
         creado_en, modificado_en
     FROM usuario
