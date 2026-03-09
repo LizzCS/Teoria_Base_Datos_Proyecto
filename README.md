@@ -27,4 +27,4 @@ Desarrollar una herramienta que ayude a las personas a organizar sus finanzas pe
 
 * Microsoft SQL Server
 * SQL Server Management Studio
-* Python
+* C#
