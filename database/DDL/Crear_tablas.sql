@@ -99,7 +99,6 @@ CREATE TABLE [transaccion] (
   [id_presupuesto_detalle] int,
   [anio_transaccion] smallint,
   [mes_transaccion] tinyint,
-  [id_obligacion] varchar(30),
   [tipo_transaccion] varchar(300),
   [numero_factura] int,
   [fecha_hora_registro] datetime,
