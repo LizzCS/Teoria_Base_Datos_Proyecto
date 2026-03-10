@@ -157,7 +157,7 @@ GO
 --- LISTAR
 CREATE PROCEDURE sp_listar_obligaciones_usuario
     @p_id_usuario INT,
-    @p_es_vigente BIT = NULL 
+    @p_es_vigente BIT
 AS
 BEGIN
     SELECT 
