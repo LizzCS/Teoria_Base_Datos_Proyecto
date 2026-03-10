@@ -2,7 +2,7 @@ USE sistema_bancario;
 GO
 
 -- INSERTAR
-CREATE PROCEDURE sp_insertar_subcategoria
+CREATE OR ALTER PROCEDURE sp_insertar_subcategoria
 	@id_categoria INT,
 	@nombre_subcategoria VARCHAR(100),
 	@descripcion VARCHAR(255),
@@ -13,13 +13,13 @@ CREATE PROCEDURE sp_insertar_subcategoria
 	AS
 	BEGIN
 
-	INSERT INTO dbo.subcategoria (id_categoria, nombre, descripcion, es_sub_defecto, creado_por, modificado_por, creado_en, modificado_en)
+	INSERT INTO dbo.subcategoria (id_categoria, nombre, descripcion, subcategoria_por_defecto, creado_por, modificado_por, creado_en, modificado_en)
 		VALUES (@id_categoria, @nombre_subcategoria, @descripcion, @es_sub_Defecto, @creado_por, @modificado_por, GETDATE(), GETDATE());
 	END
 GO
 
 -- ACTUALIZAR
-CREATE PROCEDURE  sp_actualizar_subcategoria
+CREATE OR ALTER PROCEDURE  sp_actualizar_subcategoria
 	@p_id_subcategoria INT, 
 	@p_nombre VARCHAR (100), 
 	@p_descripcion VARCHAR (255), 
@@ -43,7 +43,7 @@ CREATE PROCEDURE  sp_actualizar_subcategoria
 GO
 
 -- ELIMINAE
-CREATE PROCEDURE sp_eliminar_subcategoria
+CREATE OR ALTER PROCEDURE sp_eliminar_subcategoria
 	@p_id_subcategoria INT
 	AS
 	BEGIN 	
@@ -64,7 +64,7 @@ CREATE PROCEDURE sp_eliminar_subcategoria
 GO
 
 -- CONSULTAR
-CREATE PROCEDURE sp_consultar_subcategoria
+CREATE OR ALTER PROCEDURE sp_consultar_subcategoria
 	@p_id_subcategoria INT
 	AS
 	BEGIN 
@@ -74,9 +74,9 @@ CREATE PROCEDURE sp_consultar_subcategoria
 			RETURN;
 		END
 		SELECT id_subcategoria, id_categoria, nombre, descripcion, 
-		  CASE es_activa 
+		  CASE es_activo 
 			WHEN 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
-		, CASE es_sub_defecto 
+		, CASE subcategoria_por_defecto 
 			WHEN 1 THEN 'Es subcategoria por defecto' ELSE 'NO es subcategoria por defecto' END AS estado
 		, creado_por, modificado_por, creado_en, modificado_en, creado_en, modificado_en
 		FROM subcategoria sb
@@ -85,7 +85,7 @@ CREATE PROCEDURE sp_consultar_subcategoria
 GO
 
 -- LISTAR
-CREATE PROCEDURE sp_listar_subcategorias_por_categoria
+CREATE OR ALTER PROCEDURE sp_listar_subcategorias_por_categoria
 	@p_id_categoria INT
 	AS
 	BEGIN
