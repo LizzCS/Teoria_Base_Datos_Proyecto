@@ -2,7 +2,7 @@ USE sistema_bancario;
 GO
 
 -- INSERTAR
-CREATE PROCEDURE sp_insertar_transaccion
+CREATE OR ALTER PROCEDURE sp_insertar_transaccion
     @p_id_presupuesto_detalle INT,
     @p_monto DECIMAL(12,2),
     @p_metodo_pago VARCHAR(300),
@@ -38,6 +38,12 @@ BEGIN
         RETURN;
     END
 
+    IF @p_tipo_transaccion NOT IN ('ingreso','gasto','ahorro')
+    BEGIN
+        RAISERROR('Tipo de transacción inválido.',16,1);
+        RETURN;
+    END
+
     INSERT INTO transaccion
         (id_presupuesto_detalle, monto , metodo_pago, tipo_transaccion, fecha_hora_registro, descripcion, anio_transaccion, mes_transaccion, creado_por, modificado_por, creado_en, modificado_en)
     VALUES
@@ -46,7 +52,7 @@ END
 GO
 
 -- ACTUZALIZAR
-CREATE PROCEDURE sp_actualizar_transaccion
+CREATE OR ALTER PROCEDURE sp_actualizar_transaccion
     @p_id_transaccion INT,
     @p_monto DECIMAL(12,2),
     @p_metodo_pago VARCHAR(300),
@@ -81,6 +87,12 @@ BEGIN
         RAISERROR('Método de pago inválido.',16,1);
         RETURN;
     END
+       
+    IF @p_tipo_transaccion NOT IN ('ingreso','gasto','ahorro')
+    BEGIN
+        RAISERROR('Tipo de transacción inválido.',16,1);
+        RETURN;
+    END
     UPDATE transaccion
     SET monto = @p_monto,
         metodo_pago = @p_metodo_pago,
@@ -96,7 +108,7 @@ END
 GO
 
 -- ELIMINAR
-CREATE PROCEDURE sp_eliminar_transaccion
+CREATE OR ALTER PROCEDURE sp_eliminar_transaccion
     @p_id_transaccion INT
 AS
 BEGIN
@@ -111,7 +123,7 @@ BEGIN
 GO
 
 -- CONSULTAR
-CREATE PROCEDURE sp_consultar_transaccion
+CREATE OR ALTER PROCEDURE sp_consultar_transaccion
     @p_id_transaccion INT
 AS
 BEGIN
@@ -151,7 +163,7 @@ END
 GO
 
 --- LISTAR
-CREATE PROCEDURE sp_listar_transacciones_presupuesto
+CREATE OR ALTER PROCEDURE sp_listar_transacciones_presupuesto
     @p_id_presupuesto INT,
     @p_anio smallint,
     @p_mes tinyint,
@@ -170,7 +182,7 @@ BEGIN
         t.tipo_transaccion,
         t.tipo_transaccion,
         t.fecha_hora_registro,
-        t,
+        t.metodo_pago,
         t.anio_transaccion,
         t.mes_transaccion,
         pd.id_subcategoria,
