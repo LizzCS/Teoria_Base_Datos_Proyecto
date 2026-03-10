@@ -4,7 +4,7 @@ GO
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_presupuesto
 	@p_id_usuario INT,
-	@p_nombre_descriptivo VARCHAR (255),
+	@p_nombre_descriptivo VARCHAR (300),
 	@p_mes_inicio tinyint,
     @p_mes_fin tinyint,
 	@p_anio_inicio smallint,
