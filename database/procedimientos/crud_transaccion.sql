@@ -146,18 +146,8 @@ BEGIN
         t.modificado_por,
         t.creado_en,
         t.modificado_en,
-        pd.id_presupuesto,
-        s.id_subcategoria,
-        s.nombre AS subcategoria_nombre,
-        c.id_categoria,
-        c.nombre AS categoria_nombre
+        t.id_presupuesto_detalle
     FROM transaccion t
-    INNER JOIN presupuesto_detalle pd 
-        ON t.id_presupuesto_detalle = pd.id
-    INNER JOIN subcategoria s 
-        ON pd.id_subcategoria = s.id_subcategoria
-    INNER JOIN categoria c 
-        ON s.id_categoria = c.id_categoria
     WHERE t.id_transaccion = @p_id_transaccion;
 END
 GO
@@ -185,17 +175,7 @@ BEGIN
         t.metodo_pago,
         t.anio_transaccion,
         t.mes_transaccion,
-        pd.id_subcategoria,
-        s.nombre AS subcategoria_nombre,
-        c.id_categoria,
-        c.nombre AS categoria_nombre
+        t.id_presupuesto_detalle
     FROM transaccion t
-    INNER JOIN presupuesto_detalle pd 
-        ON t.id_presupuesto_detalle = pd.id
-    INNER JOIN subcategoria s 
-        ON pd.id_subcategoria = s.id_subcategoria
-    INNER JOIN categoria c 
-        ON s.id_categoria = c.id_categoria
-    WHERE pd.id_presupuesto = @p_id_presupuesto
 END
 GO
