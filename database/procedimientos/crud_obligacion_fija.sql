@@ -31,12 +31,6 @@ BEGIN
         RETURN;
     END
 
-    IF @p_dia_vencimiento < 1 OR @p_dia_vencimiento > 28
-    BEGIN
-        RAISERROR('El día de vencimiento debe estar entre 1 y 28.',16,1);
-        RETURN;
-    END
-
     IF  @p_fecha_fin <= @p_fecha_inicio
     BEGIN
         RAISERROR('La fecha final debe ser posterior a la fecha de inicio.',16,1);
