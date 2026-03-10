@@ -14,8 +14,8 @@ CREATE OR ALTER PROCEDURE sp_insertar_presupuesto
 
 	IF NOT EXISTS (
         SELECT 1 
-        FROM dbo.usuario 
-        WHERE usuario_id = @p_id_usuario
+        FROM dbo.usuario u
+        WHERE u.usuario_id = @p_id_usuario
     )
     BEGIN
         RAISERROR('El usuario no existe.',16,1);
@@ -104,7 +104,7 @@ BEGIN
         INNER JOIN presupuesto_detalle dp
             ON p.presupuesto_id = dp.id_presupuesto
         INNER JOIN transaccion t
-            ON t.id_presupuesto_detalle = dp.id_presupuesto_detalle
+            ON t.id_presupuesto_detalle = dp.id
         WHERE p.presupuesto_id = @p_id_presupuesto
     )
     BEGIN
@@ -144,9 +144,9 @@ BEGIN
         mes_inicio,
         anio_fin,
         mes_fin,
-        total_ingresos,
-        total_gastos,
-        total_ahorros,
+        total_ingreso,
+        total_gasto,
+        total_ahorro,
         creado_por,
         modificado_por,
         creado_en,
