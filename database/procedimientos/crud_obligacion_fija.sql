@@ -2,7 +2,7 @@ USE sistema_bancario;
 GO
 
 -- INSERTAR
-CREATE PROCEDURE sp_insertar_obligacion
+CREATE OR ALTER PROCEDURE sp_insertar_obligacion
     @p_id_usuario INT,
     @p_id_subcategoria INT,
     @p_nombre VARCHAR(300),
@@ -45,7 +45,7 @@ END
 GO
 
 -- ACTUALIZAR
-CREATE PROCEDURE sp_actualizar_obligacion
+CREATE OR ALTER PROCEDURE sp_actualizar_obligacion
     @p_id_obligacion INT,
     @p_nombre VARCHAR(300),
     @p_descripcion VARCHAR(400),
@@ -68,14 +68,7 @@ BEGIN
         RETURN;
     END
 
-    IF @p_dia_vencimiento < 1 OR @p_dia_vencimiento > 28
-    BEGIN
-        RAISERROR('El día de vencimiento debe estar entre 1 y 28.',16,1);
-        RETURN;
-    END
-
-    IF @p_fecha_fin IS NOT NULL 
-       AND @p_fecha_fin <= (SELECT fecha_inicio FROM obligacion_fija WHERE id_obligacion = @p_id_obligacion)
+    IF  @p_fecha_fin <= (SELECT fecha_inicio FROM obligacion_fija WHERE id_obligacion = @p_id_obligacion)
     BEGIN
         RAISERROR('La fecha final debe ser posterior a la fecha de inicio.',16,1);
         RETURN;
@@ -94,7 +87,7 @@ END
 GO
 
 -- ELIMINAR
-CREATE PROCEDURE sp_eliminar_obligacion
+CREATE OR ALTER PROCEDURE sp_eliminar_obligacion
     @p_id_obligacion INT
 AS
 BEGIN
@@ -112,7 +105,7 @@ END
 GO
 
 -- CONSULTAR
-CREATE PROCEDURE sp_consultar_obligacion
+CREATE OR ALTER PROCEDURE sp_consultar_obligacion
     @p_id_obligacion INT
 AS
 BEGIN
@@ -149,7 +142,7 @@ GO
 
 
 --- LISTAR
-CREATE PROCEDURE sp_listar_obligaciones_usuario
+CREATE OR ALTER PROCEDURE sp_listar_obligaciones_usuario
     @p_id_usuario INT,
     @p_es_vigente BIT
 AS
