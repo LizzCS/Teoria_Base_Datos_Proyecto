@@ -5,8 +5,8 @@ GO
 CREATE PROCEDURE sp_insertar_obligacion
     @p_id_usuario INT,
     @p_id_subcategoria INT,
-    @p_nombre VARCHAR(100),
-    @p_descripcion VARCHAR(255) = NULL,
+    @p_nombre VARCHAR(300),
+    @p_descripcion VARCHAR(400),
     @p_monto DECIMAL(12,2),
     @p_dia_vencimiento INT,
     @p_fecha_inicio DATE,
@@ -44,7 +44,7 @@ BEGIN
     END
 
     INSERT INTO obligacion_fija
-        (id_subcategoria, nombre, monto, dia_mes, fecha_inicio, fecha_final, es_vigente, creado_por, modificado_por, creado_en, modificado_en)
+        (id_subcategoria, nombre, monto_fijo_mensual, dia_del_mes, fecha_inicio, fecha_finalizacion, esta_vigente, creado_por, modificado_por, creado_en, modificado_en)
     VALUES
         (@p_id_subcategoria, @p_nombre, @p_monto, @p_dia_vencimiento, @p_fecha_inicio, @p_fecha_fin, 1, @p_creado_por, @p_creado_por, GETDATE(), GETDATE());
 END
@@ -53,11 +53,11 @@ GO
 -- ACTUALIZAR
 CREATE PROCEDURE sp_actualizar_obligacion
     @p_id_obligacion INT,
-    @p_nombre VARCHAR(100),
-    @p_descripcion VARCHAR(255) = NULL,
+    @p_nombre VARCHAR(300),
+    @p_descripcion VARCHAR(400),
     @p_monto DECIMAL(12,2),
-    @p_dia_vencimiento INT,
-    @p_fecha_fin DATE = NULL,
+    @p_dia_vencimiento tinyint,
+    @p_fecha_fin DATE,
     @p_es_vigente BIT,
     @p_modificado_por INT
 AS
@@ -89,10 +89,10 @@ BEGIN
 
     UPDATE obligacion_fija
     SET nombre = @p_nombre,
-        monto = @p_monto,
-        dia_mes = @p_dia_vencimiento,
-        fecha_final = @p_fecha_fin,
-        es_vigente = @p_es_vigente,
+        monto_fijo_mensual = @p_monto,
+        dia_del_mes = @p_dia_vencimiento,
+        fecha_finalizacion = @p_fecha_fin,
+        esta_vigente = @p_es_vigente,
         modificado_por = @p_modificado_por,
         modificado_en = GETDATE()
     WHERE id_obligacion = @p_id_obligacion;
@@ -111,7 +111,7 @@ BEGIN
     END
 
     UPDATE obligacion_fija
-    SET es_vigente = 0,
+    SET esta_vigente = 0,
         modificado_en = GETDATE()
     WHERE id_obligacion = @p_id_obligacion;
 END
@@ -131,11 +131,11 @@ BEGIN
     SELECT 
         o.id_obligacion,
         o.nombre,
-        o.monto,
-        o.dia_mes,
+        o.monto_fijo_mensual,
+        o.dia_del_mes,
         o.fecha_inicio,
-        o.fecha_final,
-        o.es_vigente,
+        o.fecha_finalizacion,
+        o.esta_vigente,
         o.creado_por,
         o.modificado_por,
         o.creado_en,
@@ -145,8 +145,10 @@ BEGIN
         c.id_categoria,
         c.nombre AS categoria_nombre
     FROM obligacion_fija o
-    INNER JOIN subcategoria s ON o.id_subcategoria = s.id_subcategoria
-    INNER JOIN categoria c ON s.id_categoria = c.id_categoria
+    INNER JOIN subcategoria s 
+        ON o.id_subcategoria = s.id_subcategoria
+    INNER JOIN categoria c 
+        ON s.id_categoria = c.id_categoria
     WHERE o.id_obligacion = @p_id_obligacion;
 END
 GO
@@ -161,20 +163,22 @@ BEGIN
     SELECT 
         o.id_obligacion,
         o.nombre,
-        o.monto,
-        o.dia_mes,
+        o.monto_fijo_mensual,
+        o.dia_del_mes,
         o.fecha_inicio,
-        o.fecha_final,
-        CASE o.es_vigente WHEN 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
+        o.fecha_finalizacion,
+        CASE o.esta_vigente WHEN 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
         s.id_subcategoria,
         s.nombre AS subcategoria_nombre,
         c.id_categoria,
         c.nombre AS categoria_nombre,
         o.creado_en
     FROM obligacion_fija o
-    INNER JOIN subcategoria s ON o.id_subcategoria = s.id_subcategoria
-    INNER JOIN categoria c ON s.id_categoria = c.id_categoria
-    WHERE (@p_es_vigente IS NULL OR o.es_vigente = @p_es_vigente)
+    INNER JOIN subcategoria s 
+        ON o.id_subcategoria = s.id_subcategoria
+    INNER JOIN categoria c 
+        ON s.id_categoria = c.id_categoria
+    WHERE (@p_es_vigente IS NULL OR o.esta_vigente = @p_es_vigente)
     ORDER BY o.fecha_inicio;
 END
 GO
