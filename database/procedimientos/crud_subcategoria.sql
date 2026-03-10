@@ -4,7 +4,7 @@ GO
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_subcategoria
 	@id_categoria INT,
-	@nombre_subcategoria VARCHAR(100),
+	@nombre_subcategoria VARCHAR(300),
 	@descripcion VARCHAR(255),
 	@es_sub_Defecto BIT,
 	@creado_por INT,
