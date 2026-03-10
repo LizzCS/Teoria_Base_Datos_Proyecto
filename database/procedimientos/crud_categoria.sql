@@ -3,9 +3,9 @@ GO
 
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_categoria
-	@p_nombre VARCHAR (100),
-	@p_descripcion VARCHAR (255),
-	@p_tipo_categoria VARCHAR (50),
+	@p_nombre VARCHAR (300),
+	@p_descripcion VARCHAR (600),
+	@p_tipo_categoria VARCHAR (300),
 	@p_creado_por INT
 	AS
 	BEGIN 
@@ -71,7 +71,7 @@ GO
 -- LISTAR
 CREATE OR ALTER PROCEDURE sp_listar_categorias
 	@p_id_usuario INT,
-	@p_tipo_categoria VARCHAR (20)
+	@p_tipo_categoria VARCHAR (300)
 	AS
 	BEGIN
 		IF NOT EXISTS (SELECT 1 FROM dbo.usuario WHERE usuario_id = @p_id_usuario)
