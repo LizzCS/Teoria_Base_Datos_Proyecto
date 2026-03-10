@@ -5,7 +5,7 @@ GO
 CREATE OR ALTER PROCEDURE sp_insertar_subcategoria
 	@id_categoria INT,
 	@nombre_subcategoria VARCHAR(300),
-	@descripcion VARCHAR(255),
+	@descripcion VARCHAR(300),
 	@es_sub_Defecto BIT,
 	@creado_por INT,
 	@modificado_por INT
@@ -21,8 +21,8 @@ GO
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE  sp_actualizar_subcategoria
 	@p_id_subcategoria INT, 
-	@p_nombre VARCHAR (100), 
-	@p_descripcion VARCHAR (255), 
+	@p_nombre VARCHAR (300), 
+	@p_descripcion VARCHAR (300), 
 	@p_modificado_por INT
 	AS
 	BEGIN

@@ -2,10 +2,10 @@ USE Sistema_bancario;
 GO
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_usuario
-	@nombre VARCHAR(100),
-	@apellido VARCHAR(100),
-	@correo_electronico VARCHAR(255),
-	@contrasena VARCHAR(255),
+	@nombre VARCHAR(300),
+	@apellido VARCHAR(300),
+	@correo_electronico VARCHAR(300),
+	@contrasena VARCHAR(300),
 	@salario_mensual DECIMAL(12, 2),
 	@creado_por INT
 AS
@@ -28,8 +28,8 @@ GO
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE sp_actualizar_usuario
     @p_id_usuario INT,
-    @p_nombre VARCHAR(100),
-    @p_apellido VARCHAR(100),
+    @p_nombre VARCHAR(300),
+    @p_apellido VARCHAR(300),
     @p_salario_mensual DECIMAL(12,2),
     @p_modificado_por INT
 AS

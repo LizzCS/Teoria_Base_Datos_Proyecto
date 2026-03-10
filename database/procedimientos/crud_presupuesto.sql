@@ -51,7 +51,7 @@ CREATE OR ALTER PROCEDURE sp_insertar_presupuesto
         RETURN;
     END
 
-	INSERT INTO dbo.presupuesto (usuario_id, nombre_descriptivo, anio_inicio, mes_inicio, anio_fin, mes_fin, fecha_creacion, creado_por, modificado_por, creado_en)
+	INSERT INTO dbo.presupuesto (usuario_id, nombre_descriptivo, anio_inicio, mes_inicio, anio_fin, mes_fin, fecha_hora_creacion, creado_por, modificado_por, creado_en)
 		VALUES (@p_id_usuario, @p_nombre_descriptivo, @p_anio_inicio,@p_mes_inicio,@p_anio_fin, @p_mes_fin, GETDATE() ,@p_id_usuario, @p_id_usuario, GETDATE());
 	END
 GO
@@ -60,7 +60,7 @@ GO
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE sp_actualizar_presupuesto
 	@p_id_presupuesto INT,
-	@p_nombre VARCHAR (255),
+	@p_nombre VARCHAR (300),
 	@p_anio_inicio smallint,
 	@p_anio_fin smallint,
 	@p_mes_inicio tinyint,
