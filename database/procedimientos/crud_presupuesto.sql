@@ -2,15 +2,13 @@ USE sistema_bancario;
 GO
 
 -- INSERTAR
-CREATE PROCEDURE sp_insertar_presupuesto
+CREATE OR ALTER PROCEDURE sp_insertar_presupuesto
 	@p_id_usuario INT,
 	@p_nombre_descriptivo VARCHAR (255),
-	@p_mes_inicio INT,
-    @p_mes_fin INT,
-	@p_anio_inicio INT,
-    @p_anio_fin INT,
-	@p_modificado_por INT
-
+	@p_mes_inicio tinyint,
+    @p_mes_fin tinyint,
+	@p_anio_inicio smallint,
+    @p_anio_fin smallint
 	AS
 	BEGIN
 
@@ -36,8 +34,7 @@ CREATE PROCEDURE sp_insertar_presupuesto
         RETURN;
     END
 
-    IF (@p_anio_inicio > @p_anio_fin OR 
-       (@p_anio_inicio = @p_anio_fin AND @p_mes_inicio > @p_mes_fin))
+    IF (@p_anio_inicio > @p_anio_fin OR (@p_anio_inicio = @p_anio_fin AND @p_mes_inicio > @p_mes_fin))
     BEGIN
         RAISERROR('El periodo de inicio no puede ser mayor que el periodo final.',16,1);
         RETURN;
@@ -54,20 +51,20 @@ CREATE PROCEDURE sp_insertar_presupuesto
         RETURN;
     END
 
-	INSERT INTO dbo.presupuesto (usuario_id, nombre_descriptivo, anio_inicio, mes_inicio, anio_fin, mes_fin, creado_por, modificado_por, creado_en)
-		VALUES (@p_id_usuario, @p_nombre_descriptivo, @p_anio_inicio,@p_mes_inicio,@p_anio_fin, @p_mes_fin, @p_modificado_por, GETDATE());
+	INSERT INTO dbo.presupuesto (usuario_id, nombre_descriptivo, anio_inicio, mes_inicio, anio_fin, mes_fin, fecha_creacion, creado_por, modificado_por, creado_en)
+		VALUES (@p_id_usuario, @p_nombre_descriptivo, @p_anio_inicio,@p_mes_inicio,@p_anio_fin, @p_mes_fin, GETDATE() ,@p_id_usuario, @p_id_usuario, GETDATE());
 	END
 GO
 
 
 -- ACTUALIZAR
-CREATE PROCEDURE sp_actualizar_presupuesto
+CREATE OR ALTER PROCEDURE sp_actualizar_presupuesto
 	@p_id_presupuesto INT,
 	@p_nombre VARCHAR (255),
-	@p_anio_inicio DATE,
-	@p_anio_fin DATE,
-	@p_mes_inicio DATE,
-	@p_mes_fin DATE,
+	@p_anio_inicio smallint,
+	@p_anio_fin smallint,
+	@p_mes_inicio tinyint,
+	@p_mes_fin tinyint,
 	@p_modificado_por INT
 	AS 
 	BEGIN
@@ -90,13 +87,12 @@ CREATE PROCEDURE sp_actualizar_presupuesto
 GO
 
 -- ELIMINAR
-CREATE PROCEDURE sp_eliminar_presupuesto
+CREATE OR ALTER PROCEDURE sp_eliminar_presupuesto
     @p_id_presupuesto INT
 AS
 BEGIN
 
-    IF NOT EXISTS (SELECT 1 FROM dbo.presupuesto WHERE presupuesto_id = @p_id_presupuesto
-    )
+    IF NOT EXISTS (SELECT 1 FROM dbo.presupuesto WHERE presupuesto_id = @p_id_presupuesto)
     BEGIN
         RAISERROR('El presupuesto con ID %d no existe.',16,1,@p_id_presupuesto);
         RETURN;
@@ -126,12 +122,10 @@ END
 GO
 
 -- CONSULTAR
-CREATE PROCEDURE sp_consultar_presupuesto
+CREATE OR ALTER PROCEDURE sp_consultar_presupuesto
     @p_id_presupuesto INT
 AS
 BEGIN
-
-    -- Verificar si el presupuesto existe
     IF NOT EXISTS (
         SELECT 1 
         FROM dbo.presupuesto 
@@ -159,12 +153,11 @@ BEGIN
         modificado_en
     FROM dbo.presupuesto
     WHERE presupuesto_id = @p_id_presupuesto;
-
 END
 GO
 
 -- LISTAR
-CREATE PROCEDURE sp_listar_presupuestos_usuario_por_estado
+CREATE OR ALTER PROCEDURE sp_listar_presupuestos_usuario_por_estado
     @p_id_usuario INT,
     @p_estado VARCHAR(20)
 AS
@@ -177,19 +170,12 @@ BEGIN
         p.anio_fin,
         p.mes_fin,
         CASE p.estado_presupuesto
-            WHEN 1 THEN 'activo'
-            WHEN 2 THEN 'cerrado'
-            WHEN 3 THEN 'borrador'
+            WHEN 1 THEN 'Activo'
+            WHEN 2 THEN 'Cerrado'
+            WHEN 3 THEN 'Borrador'
         END AS estado_presupuesto,
         p.creado_en
     FROM dbo.presupuesto p
     WHERE p.usuario_id = @p_id_usuario
-      AND (
-            CASE p.estado_presupuesto
-                WHEN 1 THEN 'activo'
-                WHEN 2 THEN 'cerrado'
-                WHEN 3 THEN 'borrador'
-           END = @p_estado)
-    ORDER BY p.anio_inicio, p.mes_inicio;
 END
 GO
