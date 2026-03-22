@@ -12,27 +12,19 @@ CREATE OR ALTER PROCEDURE sp_insertar_presupuesto_detalle
 AS
 BEGIN
 
-    IF NOT EXISTS (
-        SELECT 1
-        FROM presupuesto
-        WHERE presupuesto_id = @p_id_presupuesto
-    )
-    BEGIN
+    IF NOT EXISTS (SELECT 1 FROM presupuesto WHERE presupuesto_id = @p_id_presupuesto)
+        BEGIN
         RAISERROR('El presupuesto no existe.', 16, 1);
         RETURN;
     END
 
-    IF NOT EXISTS (
-        SELECT 1
-        FROM subcategoria
-        WHERE id_subcategoria = @p_id_subcategoria
-    )
+    IF NOT EXISTS (SELECT 1 FROM subcategoria WHERE id_subcategoria = @p_id_subcategoria)
     BEGIN
         RAISERROR('La subcategoría no existe.', 16, 1);
         RETURN;
     END
 
-    IF @p_monto_mensual < 0
+    IF (@p_monto_mensual < 0)
     BEGIN
         RAISERROR('El monto mensual no puede ser negativo.', 16, 1);
         RETURN;
@@ -42,8 +34,7 @@ BEGIN
         (id_presupuesto, id_subcategoria, monto_mensual, observacion_monto, creado_por, creado_en)
     VALUES
         (@p_id_presupuesto, @p_id_subcategoria, @p_monto_mensual, @p_observaciones, @p_creado_por, GETDATE());
-
-END
+    END
 GO
 
 -- ACTUALIZAR
@@ -76,11 +67,16 @@ CREATE OR ALTER PROCEDURE sp_eliminar_presupuesto_detalle
     @p_id_detalle INT
     AS
     BEGIN
+    IF EXISTS (SELECT 1 FROM transaccion WHERE id_presupuesto_detalle = @p_id_detalle)
+    BEGIN
+        RAISERROR('No se puede eliminar el detalle porque tiene transacciones asociadas.', 16, 1);
+        RETURN;
+    END
     IF NOT EXISTS ( SELECT 1 FROM presupuesto_detalle WHERE id = @p_id_detalle)
         BEGIN
             RAISERROR('El presupuesto detalle no existe.', 16, 1);
             RETURN;
-    END
+        END
     DELETE FROM presupuesto_detalle
     WHERE id = @p_id_detalle 
   END

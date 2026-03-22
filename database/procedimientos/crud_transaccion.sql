@@ -20,25 +20,25 @@ BEGIN
         RETURN;
     END
 
-    IF @p_monto < 0
+    IF (@p_monto < 0)
     BEGIN
         RAISERROR('El monto no puede ser negativo.',16,1);
         RETURN;
     END
 
-    IF @p_mes < 1 OR @p_mes > 12
+    IF (@p_mes NOT BETWEEN 1 AND 12)
     BEGIN
         RAISERROR('El mes debe estar entre 1 y 12.',16,1);
         RETURN;
     END
 
-    IF @p_metodo_pago NOT IN ('efectivo','tarjeta debito','tarjeta credito','transferencia')
+    IF (@p_metodo_pago NOT IN ('efectivo','tarjeta debito','tarjeta credito','transferencia'))
     BEGIN
         RAISERROR('Método de pago inválido.',16,1);
         RETURN;
     END
 
-    IF @p_tipo_transaccion NOT IN ('ingreso','gasto','ahorro')
+    IF (@p_tipo_transaccion NOT IN ('ingreso','gasto','ahorro'))
     BEGIN
         RAISERROR('Tipo de transacción inválido.',16,1);
         RETURN;
@@ -70,25 +70,25 @@ BEGIN
         RETURN;
     END
 
-    IF @p_monto < 0
+    IF (@p_monto < 0)
     BEGIN
         RAISERROR('El monto no puede ser negativo.',16,1);
         RETURN;
     END
 
-    IF @p_mes < 1 OR @p_mes > 12
+    IF (@p_mes NOT BETWEEN 1 AND 12)
     BEGIN
         RAISERROR('El mes debe estar entre 1 y 12.',16,1);
         RETURN;
     END
 
-    IF @p_metodo_pago NOT IN ('efectivo','tarjeta debito','tarjeta credito','transferencia')
+    IF (@p_metodo_pago NOT IN ('efectivo','tarjeta debito','tarjeta credito','transferencia'))
     BEGIN
         RAISERROR('Método de pago inválido.',16,1);
         RETURN;
     END
        
-    IF @p_tipo_transaccion NOT IN ('ingreso','gasto','ahorro')
+    IF (@p_tipo_transaccion NOT IN ('ingreso','gasto','ahorro'))
     BEGIN
         RAISERROR('Tipo de transacción inválido.',16,1);
         RETURN;
@@ -137,6 +137,7 @@ BEGIN
         t.id_transaccion,
         t.id_presupuesto_detalle,
         t.monto,
+        t.tipo_transaccion,
         t.metodo_pago,
         t.fecha_hora_registro,
         t.descripcion,
@@ -145,8 +146,7 @@ BEGIN
         t.creado_por,
         t.modificado_por,
         t.creado_en,
-        t.modificado_en,
-        t.id_presupuesto_detalle
+        t.modificado_en
     FROM transaccion t
     WHERE t.id_transaccion = @p_id_transaccion;
 END
@@ -166,10 +166,15 @@ BEGIN
         RETURN;
     END
 
+    IF (@p_mes IS NOT NULL AND @p_mes NOT BETWEEN 1 AND 12)
+    BEGIN
+        RAISERROR('El mes debe estar entre 1 y 12.',16,1);
+        RETURN;
+    END
+
     SELECT 
         t.id_transaccion,
         t.monto,
-        t.tipo_transaccion,
         t.tipo_transaccion,
         t.fecha_hora_registro,
         t.metodo_pago,
@@ -177,5 +182,12 @@ BEGIN
         t.mes_transaccion,
         t.id_presupuesto_detalle
     FROM transaccion t
+    INNER JOIN presupuesto_detalle pd
+        ON t.id_presupuesto_detalle = pd.id
+    WHERE pd.id_presupuesto = @p_id_presupuesto
+      AND (@p_anio IS NULL OR t.anio_transaccion = @p_anio)
+      AND (@p_mes  IS NULL OR t.mes_transaccion  = @p_mes)
+      AND (@p_tipo IS NULL OR t.tipo_transaccion = @p_tipo)
+    ORDER BY t.fecha_hora_registro DESC;
 END
 GO

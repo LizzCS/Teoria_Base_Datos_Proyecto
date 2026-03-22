@@ -2,26 +2,26 @@ USE Sistema_bancario;
 GO
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_usuario
-	@nombre VARCHAR(300),
-	@apellido VARCHAR(300),
-	@correo_electronico VARCHAR(300),
-	@contrasena VARCHAR(300),
-	@salario_mensual DECIMAL(12, 2),
-	@creado_por INT
+	@p_nombre VARCHAR(300),
+	@p_apellido VARCHAR(300),
+	@p_correo_electronico VARCHAR(300),
+	@p_contrasenia VARCHAR(300),
+	@p_salario_mensual DECIMAL(12, 2),
+	@p_creado_por INT
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM usuario WHERE correo_electronico = @correo_electronico)
+    IF EXISTS (SELECT 1 FROM usuario WHERE correo_electronico = @p_correo_electronico)
     BEGIN
         RAISERROR('El correo electrónico ya está registrado.', 16, 1);
         RETURN;
     END
-    IF (@salario_mensual < 0)
+    IF (@p_salario_mensual < 0)
     BEGIN
         RAISERROR('El salario mensual no puede ser negativo.', 16, 1);
         RETURN;
     END
 	INSERT INTO usuario (nombre, apellido, correo_electronico, contrasenia, fecha_registro, salario_mensual_base, estado_usuario, creado_por,creado_en)
-	VALUES (@nombre, @apellido, @correo_electronico, @contrasena, GETDATE(), @salario_mensual, 1, @creado_por,GETDATE());
+	VALUES (@p_nombre, @p_apellido, @p_correo_electronico, @p_contrasenia, GETDATE(), @p_salario_mensual, 1, @p_creado_por,GETDATE());
 END
 GO
     
@@ -37,6 +37,12 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
     BEGIN
         RAISERROR('El usuario no existe.', 16, 1);
+        RETURN;
+    END
+
+    IF (@p_salario_mensual < 0)
+    BEGIN
+        RAISERROR('El salario mensual no puede ser negativo.', 16, 1);
         RETURN;
     END
 

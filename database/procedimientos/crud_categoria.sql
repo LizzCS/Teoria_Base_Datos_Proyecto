@@ -8,48 +8,70 @@ CREATE OR ALTER PROCEDURE sp_insertar_categoria
 	@p_tipo_categoria VARCHAR (300),
 	@p_creado_por INT
 	AS
-	BEGIN 
+	BEGIN
+    
+    IF @p_tipo_categoria NOT IN ('ahorro','gasto','ingreso')
+    BEGIN
+        RAISERROR('Tipo de categoria incorrecto.',16,1)
+        RETURN;
+    END
 		INSERT INTO dbo.categoria (nombre, descripcion, tipo_categoria, creado_por, creado_en)
 		VALUES (@p_nombre, @p_descripcion, @p_tipo_categoria, @p_creado_por, GETDATE());
-END
+    END
 GO
 
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE sp_actualizar_categoria
-	@p_id_categoria INT,
-	@p_nombre VARCHAR (300),
-	@p_descripcion VARCHAR (300),
-	@p_modificado_por INT
-	AS
-	BEGIN
-		IF NOT EXISTS (SELECT 1 FROM dbo.categoria c WHERE c.id_categoria = @p_id_categoria)
-		BEGIN
-			RAISERROR('La categoría con ID %d no existe.', 16, 1, @p_id_categoria);
-			RETURN;
-		END
-
-		UPDATE dbo.categoria
-		SET nombre = @p_nombre,
-			descripcion = @p_descripcion,
-			modificado_por = @p_modificado_por,
-			modificado_en = GETDATE()
-		WHERE id_categoria = @p_id_categoria;
-	END
+    @p_id_categoria INT,
+    @p_nombre VARCHAR(300),
+    @p_descripcion VARCHAR(300),
+    @p_modificado_por  INT
+AS
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM dbo.categoria WHERE id_categoria = @p_id_categoria)
+    BEGIN
+        RAISERROR('La categoria con ID %d no existe.', 16, 1, @p_id_categoria)
+        RETURN;
+    END
+ 
+    UPDATE dbo.categoria
+    SET nombre = @p_nombre,
+        descripcion = @p_descripcion,
+        modificado_por = @p_modificado_por,
+        modificado_en = GETDATE()
+    WHERE id_categoria = @p_id_categoria;
+END
 GO
+ 
 
 -- ELIMINAR
 CREATE OR ALTER PROCEDURE sp_eliminar_categoria
-	@p_id_categoria INT
-	AS
-	BEGIN 	
-		IF NOT EXISTS (SELECT 1 FROM dbo.categoria c WHERE c.id_categoria = @p_id_categoria)
-		BEGIN
-			RAISERROR('La categoría con ID %d no existe.', 16, 1, @p_id_categoria);
-			RETURN;
-		END
-		DELETE FROM dbo.categoria
-		WHERE id_categoria = @p_id_categoria;
-	END
+    @p_id_categoria INT
+AS
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM dbo.categoria WHERE id_categoria = @p_id_categoria)
+    BEGIN
+        RAISERROR('La categoría con ID %d no existe.', 16, 1, @p_id_categoria);
+        RETURN;
+    END
+ 
+    IF EXISTS (
+        SELECT 1
+        FROM dbo.subcategoria sb
+        INNER JOIN dbo.presupuesto_detalle pd ON pd.id_subcategoria = sb.id_subcategoria
+        WHERE sb.id_categoria = @p_id_categoria
+    )
+    BEGIN
+        RAISERROR('No se puede eliminar la categoría con ID %d porque tiene subcategorías en uso en presupuestos.', 16, 1, @p_id_categoria);
+        RETURN;
+    END
+ 
+    DELETE FROM dbo.subcategoria
+    WHERE id_categoria = @p_id_categoria;
+ 
+    DELETE FROM dbo.categoria
+    WHERE id_categoria = @p_id_categoria;
+END
 GO
 
 -- CONSULTAR
@@ -70,23 +92,48 @@ GO
 
 -- LISTAR
 CREATE OR ALTER PROCEDURE sp_listar_categorias
-	@p_id_usuario INT,
-	@p_tipo_categoria VARCHAR (20)
-	AS
-	BEGIN
-		IF NOT EXISTS (SELECT 1 FROM dbo.usuario WHERE usuario_id = @p_id_usuario)
-		BEGIN
-			RAISERROR('El usuario con ID %d no existe.', 16, 1, @p_id_usuario);
-			RETURN;
-		END
-		SELECT DISTINCT c.tipo_categoria, p.usuario_id
-		FROM categoria c
-		INNER JOIN dbo.subcategoria sb 
-			ON c.id_categoria = sb.id_categoria
-		INNER JOIN dbo.presupuesto_detalle pd 
-			ON sb.id_subcategoria = pd.id_subcategoria
-		INNER JOIN dbo.presupuesto p
-			ON pd.id_presupuesto = p.presupuesto_id
-			WHERE p.usuario_id = @p_id_usuario
-	END 
+    @p_id_usuario INT,
+    @p_tipo_categoria VARCHAR(20)
+AS
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM dbo.usuario WHERE usuario_id = @p_id_usuario)
+    BEGIN
+        RAISERROR('El usuario con ID %d no existe.', 16, 1, @p_id_usuario);
+        RETURN;
+    END
+ 
+    SELECT DISTINCT
+        c.id_categoria,
+        c.nombre AS nombre_categoria,
+        c.descripcion,
+        c.tipo_categoria,
+        p.usuario_id
+    FROM dbo.categoria c
+    INNER JOIN dbo.subcategoria sb
+        ON c.id_categoria = sb.id_categoria
+    INNER JOIN dbo.presupuesto_detalle pd
+        ON sb.id_subcategoria = pd.id_subcategoria
+    INNER JOIN dbo.presupuesto p
+        ON pd.id_presupuesto = p.presupuesto_id
+    WHERE p.usuario_id    = @p_id_usuario
+      AND c.tipo_categoria = @p_tipo_categoria 
+    ORDER BY c.nombre;
+END
+GO
+
+-- TRIGGER
+CREATE OR ALTER TRIGGER trg_subcategoria_defecto_por_categoria
+ON dbo.categoria
+AFTER INSERT
+AS
+BEGIN
+ 
+    INSERT INTO dbo.subcategoria (id_categoria, nombre, descripcion, subcategoria_por_defecto,
+        es_activo, creado_por, modificado_por, creado_en, modificado_en)
+
+    SELECT
+        i.id_categoria,'General','Subcategoría general creada automáticamente para ' + i.nombre,
+        1, 1, i.creado_por, i.creado_por, GETDATE(), GETDATE()
+    FROM inserted i;
+    END
 GO
