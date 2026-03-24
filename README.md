@@ -8,9 +8,8 @@ El **Sistema de Presupuesto Mensual Personal** permite a los usuarios planificar
 ## Tecnologías utilizadas
 - **Base de datos:** Microsoft SQL Server  
 - **Gestión de BD:** SQL Server Management Studio  
-- **Backend:** Python / API REST (con procedimientos almacenados)  
-- **Frontend:** Web (HTML, CSS, JavaScript)  
-- **Reportería:** Metabase  
+- **Lenguage de Programacion:** C#
+- **Frontend:** Consola
 
 ---
 
@@ -107,10 +106,3 @@ El sistema genera 6 reportes obligatorios:
 
 Todos los reportes se pueden exportar a PDF.
 
-## Evaluación
-- Modelo de datos y diseño: 30%  
-- Base de datos: 30%  
-- Backend (API): 15%  
-- Reportería: 10%  
-- Frontend: 10%  
-- Documentación y presentación: 5%  
