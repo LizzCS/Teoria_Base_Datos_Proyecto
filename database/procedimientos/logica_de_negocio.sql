@@ -14,12 +14,20 @@ CREATE OR ALTER PROCEDURE sp_crear_presupuesto_completo
     @p_creado_por int
 AS
 BEGIN
+
+IF NOT EXISTS ( SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
+    BEGIN
+        RAISERROR ('El usuario no existe.',16,1)
+        RETURN
+END
+
+
+
 BEGIN TRY
     BEGIN TRANSACTION
 
     DECLARE @id_presupuesto int
 
-    -- Insertar directamente en lugar de llamar el SP
     INSERT INTO dbo.presupuesto 
         (usuario_id, estado_presupuesto, nombre_descriptivo, descripcion, 
          anio_inicio, mes_inicio, anio_fin, mes_fin, 

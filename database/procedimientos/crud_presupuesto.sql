@@ -159,6 +159,7 @@ BEGIN
         total_ingreso,
         total_gasto,
         total_ahorro,
+        estado_presupuesto,
         creado_por,
         modificado_por,
         creado_en,
