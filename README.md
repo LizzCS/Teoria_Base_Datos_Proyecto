@@ -106,3 +106,4 @@ El sistema genera 6 reportes obligatorios:
 
 Todos los reportes se pueden exportar a PDF.
 
+## NOTA: SE UTILIZO IA PARA LAS PARTES VISUALES DEL PROGRAMA.
