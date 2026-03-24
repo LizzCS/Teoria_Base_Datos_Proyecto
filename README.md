@@ -73,16 +73,12 @@ Se implementaron procedimientos para:
 ---
 
 ## Estructura del Proyecto
-Forms (UI)
 
+    CAPA DE PRESENTACIÓN (Frontend)
     ↓
-Services (Logica de negocio)
-
+    CAPA DE NEGOCIO (Backend/API)
     ↓
-Microsoft.Data.SqlClient (Driver)
-
-    ↓
-SQL Server
+    CAPA DE DATOS (Base de Datos)
 
 ## Reportes (Metabase)
 El sistema genera 6 reportes obligatorios:  
