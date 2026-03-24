@@ -1,42 +1,48 @@
 USE Sistema_bancario;
 GO
 -- INSERTAR
-CREATE PROCEDURE sp_insertar_usuario
-	@nombre VARCHAR(100),
-	@apellido VARCHAR(100),
-	@correo_electronico VARCHAR(255),
-	@contrasena VARCHAR(255),
-	@salario_mensual DECIMAL(10, 2),
-	@creado_por INT
+CREATE OR ALTER PROCEDURE sp_insertar_usuario
+	@p_nombre varchar(300),
+	@p_apellido varchar(300),
+	@p_correo_electronico varchar(300),
+	@p_contrasenia varchar(300),
+	@p_salario_mensual decimal(12, 2),
+	@p_creado_por int
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM usuario WHERE correo_electronico = @correo_electronico)
+    IF EXISTS (SELECT 1 FROM usuario WHERE correo_electronico = @p_correo_electronico)
     BEGIN
         RAISERROR('El correo electrónico ya está registrado.', 16, 1);
         RETURN;
     END
-    IF (@salario_mensual < 0)
+    IF (@p_salario_mensual < 0)
     BEGIN
         RAISERROR('El salario mensual no puede ser negativo.', 16, 1);
         RETURN;
     END
-	INSERT INTO usuario (nombre, apellido, correo_electronico, contrasena, fecha_registro, salario_mensual, estado_usuario, creado_por,creado_en)
-	VALUES (@nombre, @apellido, @correo_electronico, @contrasena, GETDATE(), @salario_mensual, 1, @creado_por,GETDATE());
+	INSERT INTO usuario (nombre, apellido, correo_electronico, contrasenia, fecha_registro, salario_mensual_base, estado_usuario, creado_por,creado_en)
+	VALUES (@p_nombre, @p_apellido, @p_correo_electronico, @p_contrasenia, GETDATE(), @p_salario_mensual, 1, @p_creado_por,GETDATE());
 END
 GO
     
 -- ACTUALIZAR
-CREATE PROCEDURE sp_actualizar_usuario
-    @p_id_usuario INT,
-    @p_nombre VARCHAR(100),
-    @p_apellido VARCHAR(100),
-    @p_salario_mensual DECIMAL(10,2),
-    @p_modificado_por INT
+CREATE OR ALTER PROCEDURE sp_actualizar_usuario
+    @p_id_usuario int,
+    @p_nombre varchar(300),
+    @p_apellido varchar(300),
+    @p_salario_mensual decimal(12,2),
+    @p_modificado_por int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
     BEGIN
         RAISERROR('El usuario no existe.', 16, 1);
+        RETURN;
+    END
+
+    IF (@p_salario_mensual < 0)
+    BEGIN
+        RAISERROR('El salario mensual no puede ser negativo.', 16, 1);
         RETURN;
     END
 
@@ -48,7 +54,7 @@ BEGIN
     UPDATE usuario
     SET nombre = @p_nombre,
         apellido = @p_apellido,
-        salario_mensual = @p_salario_mensual,
+        salario_mensual_base = @p_salario_mensual,
         modificado_por = @p_modificado_por,
         modificado_en = GETDATE()
     WHERE usuario_id = @p_id_usuario;
@@ -56,9 +62,9 @@ END
 GO
 
 -- ELIMINAR
-CREATE PROCEDURE sp_eliminar_usuario
-    @p_id_usuario INT,
-    @p_modificado_por INT
+CREATE OR ALTER PROCEDURE sp_eliminar_usuario
+    @p_id_usuario int,
+    @p_modificado_por int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
@@ -75,8 +81,8 @@ END
 GO
 
 -- MOSTRAR
-CREATE PROCEDURE sp_consultar_usuario
-    @p_id_usuario INT
+CREATE OR ALTER PROCEDURE sp_consultar_usuario
+    @p_id_usuario int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
@@ -84,7 +90,7 @@ BEGIN
         RAISERROR('El usuario no existe.', 16, 1);
         RETURN;
     END
-    SELECT usuario_id, nombre, apellido, correo_electronico, contrasena, fecha_registro, salario_mensual, estado_usuario, creado_por, modificado_por ,
+    SELECT usuario_id, nombre, apellido, correo_electronico, contrasenia, fecha_registro, salario_mensual_base, estado_usuario, creado_por, modificado_por ,
         creado_en, modificado_en
     FROM usuario
     WHERE usuario_id = @p_id_usuario;
@@ -92,12 +98,16 @@ END
 GO
 
 -- LISTAR
-CREATE PROCEDURE sp_listar_usuarios
+CREATE OR ALTER PROCEDURE sp_listar_usuarios
 AS
 BEGIN
-    SELECT usuario_id, nombre, apellido, correo_electronico, salario_mensual,
-           CASE estado_usuario WHEN 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
-           fecha_registro
+    SELECT usuario_id, 
+    nombre, 
+    apellido, 
+    correo_electronico, 
+    salario_mensual_base,
+    CASE estado_usuario WHEN 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
+    fecha_registro
     FROM usuario
     ORDER BY nombre, apellido;
 END
