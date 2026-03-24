@@ -2,12 +2,12 @@ USE Sistema_bancario;
 GO
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_usuario
-	@p_nombre VARCHAR(300),
-	@p_apellido VARCHAR(300),
-	@p_correo_electronico VARCHAR(300),
-	@p_contrasenia VARCHAR(300),
-	@p_salario_mensual DECIMAL(12, 2),
-	@p_creado_por INT
+	@p_nombre varchar(300),
+	@p_apellido varchar(300),
+	@p_correo_electronico varchar(300),
+	@p_contrasenia varchar(300),
+	@p_salario_mensual decimal(12, 2),
+	@p_creado_por int
 AS
 BEGIN
     IF EXISTS (SELECT 1 FROM usuario WHERE correo_electronico = @p_correo_electronico)
@@ -27,11 +27,11 @@ GO
     
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE sp_actualizar_usuario
-    @p_id_usuario INT,
-    @p_nombre VARCHAR(300),
-    @p_apellido VARCHAR(300),
-    @p_salario_mensual DECIMAL(12,2),
-    @p_modificado_por INT
+    @p_id_usuario int,
+    @p_nombre varchar(300),
+    @p_apellido varchar(300),
+    @p_salario_mensual decimal(12,2),
+    @p_modificado_por int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
@@ -63,8 +63,8 @@ GO
 
 -- ELIMINAR
 CREATE OR ALTER PROCEDURE sp_eliminar_usuario
-    @p_id_usuario INT,
-    @p_modificado_por INT
+    @p_id_usuario int,
+    @p_modificado_por int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
@@ -82,7 +82,7 @@ GO
 
 -- MOSTRAR
 CREATE OR ALTER PROCEDURE sp_consultar_usuario
-    @p_id_usuario INT
+    @p_id_usuario int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario_id = @p_id_usuario)
@@ -101,9 +101,13 @@ GO
 CREATE OR ALTER PROCEDURE sp_listar_usuarios
 AS
 BEGIN
-    SELECT usuario_id, nombre, apellido, correo_electronico, salario_mensual_base,
-           CASE estado_usuario WHEN 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
-           fecha_registro
+    SELECT usuario_id, 
+    nombre, 
+    apellido, 
+    correo_electronico, 
+    salario_mensual_base,
+    CASE estado_usuario WHEN 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
+    fecha_registro
     FROM usuario
     ORDER BY nombre, apellido;
 END

@@ -3,11 +3,11 @@ GO
 
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_subcategoria
-    @p_id_categoria INT,
-    @p_nombre VARCHAR(300),
-    @p_descripcion VARCHAR(300),
-    @p_es_defecto BIT,
-    @p_creado_por INT
+    @p_id_categoria int,
+    @p_nombre varchar(300),
+    @p_descripcion varchar(300),
+    @p_es_defecto bit,
+    @p_creado_por int
 AS
 BEGIN
 
@@ -27,10 +27,10 @@ GO
 
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE  sp_actualizar_subcategoria
-	@p_id_subcategoria INT, 
-	@p_nombre VARCHAR (300), 
-	@p_descripcion VARCHAR (300), 
-	@p_modificado_por INT
+	@p_id_subcategoria int, 
+	@p_nombre varchar(300), 
+	@p_descripcion varchar(300), 
+	@p_modificado_por int
 	AS
 	BEGIN
 
@@ -51,7 +51,7 @@ GO
 
 -- ELIMINAE
 CREATE OR ALTER PROCEDURE sp_eliminar_subcategoria
-	@p_id_subcategoria INT
+	@p_id_subcategoria int
 	AS
 	BEGIN 	
 	IF NOT EXISTS (SELECT 1 FROM dbo.subcategoria sb WHERE sb.id_subcategoria = @p_id_subcategoria)
@@ -73,7 +73,7 @@ GO
 
 -- CONSULTAR SUBCATEGORIA
 CREATE OR ALTER PROCEDURE sp_consultar_subcategoria
-    @p_id_subcategoria INT
+    @p_id_subcategoria int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.subcategoria WHERE id_subcategoria = @p_id_subcategoria)
@@ -109,7 +109,7 @@ GO
 
 -- LISTAR
 CREATE OR ALTER PROCEDURE sp_listar_subcategorias_por_categoria
-	@p_id_categoria INT
+	@p_id_categoria int
 	AS
 	BEGIN
 		IF NOT EXISTS (SELECT 1 FROM dbo.categoria sb WHERE sb.id_categoria = @p_id_categoria)

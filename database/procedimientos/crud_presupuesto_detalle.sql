@@ -4,11 +4,11 @@ GO
 
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_presupuesto_detalle
-    @p_id_presupuesto INT,
-    @p_id_subcategoria INT,
-    @p_monto_mensual NUMERIC(12,2),
-    @p_observaciones VARCHAR(255),
-    @p_creado_por INT
+    @p_id_presupuesto int,
+    @p_id_subcategoria int,
+    @p_monto_mensual numeric(12,2),
+    @p_observaciones varchar(255),
+    @p_creado_por int
 AS
 BEGIN
 
@@ -39,10 +39,10 @@ GO
 
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE sp_actualizar_presupuesto_detalle
-    @p_id_detalle INT,
-    @p_monto_mensual NUMERIC (12,2),
-    @p_observaciones VARCHAR(255),
-    @p_modificado_por INT
+    @p_id_detalle int,
+    @p_monto_mensual numeric (12,2),
+    @p_observaciones varchar(255),
+    @p_modificado_por int
     AS
     BEGIN
 
@@ -64,7 +64,7 @@ GO
 
 ---- ELIMINAR
 CREATE OR ALTER PROCEDURE sp_eliminar_presupuesto_detalle
-    @p_id_detalle INT
+    @p_id_detalle int
     AS
     BEGIN
     IF EXISTS (SELECT 1 FROM transaccion WHERE id_presupuesto_detalle = @p_id_detalle)
@@ -85,7 +85,7 @@ GO
 
 -- CONSULTAR 
 CREATE OR ALTER PROCEDURE sp_consultar_presupuesto_detalle
-    @p_id_detalle INT
+    @p_id_detalle int
 AS
 BEGIN
 
@@ -128,7 +128,7 @@ GO
 
 ---- LISTAR 
 CREATE OR ALTER PROCEDURE sp_listar_detalles_presupuesto
-    @p_id_presupuesto INT
+    @p_id_presupuesto int
 AS
 BEGIN
 

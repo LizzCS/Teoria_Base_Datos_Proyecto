@@ -137,7 +137,7 @@ GO
 
 -- CONSULTAR
 CREATE OR ALTER PROCEDURE sp_consultar_presupuesto
-    @p_id_presupuesto INT
+    @p_id_presupuesto int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.presupuesto 
@@ -170,8 +170,8 @@ GO
 
 -- LISTAR
 CREATE OR ALTER PROCEDURE sp_listar_presupuestos_usuario_por_estado
-    @p_id_usuario INT,
-    @p_estado INT
+    @p_id_usuario int,
+    @p_estado int
 AS
 BEGIN
 

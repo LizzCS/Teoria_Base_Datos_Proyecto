@@ -2,8 +2,8 @@ USE sistema_bancario;
 GO
 
 -- CALCULAR MONTO FN
-CREATE OR ALTER FUNCTION fn_calcular_monto_ejecutado(@id_subcategoria INT, @anio smallint, @mes tinyint)
-	RETURNS DECIMAL(12,2)
+CREATE OR ALTER FUNCTION fn_calcular_monto_ejecutado(@id_subcategoria int, @anio smallint, @mes tinyint)
+	RETURNS decimal(12,2)
 	AS
 	BEGIN
 
@@ -13,7 +13,7 @@ CREATE OR ALTER FUNCTION fn_calcular_monto_ejecutado(@id_subcategoria INT, @anio
     IF (@mes NOT BETWEEN 1 AND 12)
         RETURN NULL;
 	
-	DECLARE @total DECIMAL(12,2);
+	DECLARE @total decimal(12,2);
 
 	SELECT
 		@total = SUM (t.monto)
@@ -30,7 +30,7 @@ CREATE OR ALTER FUNCTION fn_calcular_monto_ejecutado(@id_subcategoria INT, @anio
 GO
 
 -- CALCULAR PORCENTAJE 
-CREATE OR ALTER FUNCTION fn_calcular_porcentaje_ejecutado(@id_subcategoria INT, @anio smallint, @mes tinyint, @id_presupuesto INT)
+CREATE OR ALTER FUNCTION fn_calcular_porcentaje_ejecutado(@id_subcategoria int, @anio smallint, @mes tinyint, @id_presupuesto int)
 RETURNS DECIMAL(12,2)
 AS
 BEGIN
@@ -64,7 +64,7 @@ END
 GO
 
 -- CALCULAR BALANCE SUBCATEGORIA
-CREATE OR ALTER FUNCTION fn_obtener_balance_subcategoria(@id_presupuesto INT, @id_subcategoria INT, @anio smallint, @mes tinyint)
+CREATE OR ALTER FUNCTION fn_obtener_balance_subcategoria(@id_presupuesto int, @id_subcategoria int, @anio smallint, @mes tinyint)
 RETURNS DECIMAL(12,2)
 AS
 BEGIN
@@ -78,8 +78,8 @@ BEGIN
     IF (@mes NOT BETWEEN 1 AND 12)
         RETURN NULL;
     
-    DECLARE @ejecutado DECIMAL(12,2);
-    DECLARE @presupuestado DECIMAL(12,2);
+    DECLARE @ejecutado decimal(12,2);
+    DECLARE @presupuestado decimal(12,2);
 
     SELECT @ejecutado = dbo.fn_calcular_monto_ejecutado(@id_subcategoria,@anio,@mes);
 
@@ -94,7 +94,7 @@ GO
 
 -- OBTENER TOTAL DEL MES
 CREATE OR ALTER FUNCTION fn_obtener_total_categoria_mes(@id_categoria INT, @id_presupuesto INT, @anio smallint, @mes TINYINT)
-RETURNS DECIMAL(12,2)
+RETURNS decimal(12,2)
 AS
 BEGIN
     
@@ -107,7 +107,7 @@ BEGIN
     IF (@mes NOT BETWEEN 1 AND 12)
         RETURN NULL;
   
-    DECLARE @total DECIMAL(12,2);
+    DECLARE @total decimal(12,2);
 
     SELECT @total = ISNULL(SUM(pd.monto_mensual),0)
     FROM subcategoria s
@@ -120,7 +120,7 @@ BEGIN
 GO
 
 CREATE OR ALTER FUNCTION fn_obtener_total_ejecutado_categoria_mes( @id_categoria INT, @anio smallint, @mes tinyint)
-RETURNS DECIMAL(12,2)
+RETURNS decimal(12,2)
 AS
 BEGIN
     
@@ -130,7 +130,7 @@ BEGIN
     IF (@mes NOT BETWEEN 1 AND 12)
         RETURN NULL;
 
-    DECLARE @total DECIMAL(12,2);
+    DECLARE @total decimal(12,2);
 
     SELECT @total = ISNULL(SUM(t.monto),0)
     FROM subcategoria s
@@ -146,15 +146,15 @@ END
 GO
 
 -- DIAS HASTA VENCIMIENTO
-CREATE OR ALTER FUNCTION fn_dias_hasta_vencimiento (@id_obligacion INT)
-RETURNS INT
+CREATE OR ALTER FUNCTION fn_dias_hasta_vencimiento (@id_obligacion int)
+RETURNS int
 AS
 BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM obligacion_fija  WHERE id_obligacion = @id_obligacion)
         RETURN NULL;
 
-    DECLARE @dias INT;
+    DECLARE @dias int;
 
     SELECT @dias = DATEDIFF(DAY, GETDATE(), fecha_finalizacion)
     FROM obligacion_fija
@@ -165,8 +165,8 @@ BEGIN
 GO
 
 -- VALIDAR VIGENCIA
-CREATE OR ALTER FUNCTION fn_validar_vigencia_presupuesto(@fecha DATE, @id_presupuesto INT)
-RETURNS BIT
+CREATE OR ALTER FUNCTION fn_validar_vigencia_presupuesto(@fecha date, @id_presupuesto int)
+RETURNS bit
 AS
 BEGIN
     DECLARE @periodo_inicio INT,
@@ -192,15 +192,15 @@ BEGIN
 GO
 
 -- OBTENER CATEGORIA POR SUBCATEGORIA
-CREATE OR ALTER FUNCTION fn_obtener_categoria_por_subcategoria (@id_subcategoria INT)
-RETURNS INT
+CREATE OR ALTER FUNCTION fn_obtener_categoria_por_subcategoria (@id_subcategoria int)
+RETURNS int
 AS
 BEGIN
 
     IF NOT EXISTS (SELECT 1 FROM subcategoria WHERE id_subcategoria = @id_subcategoria)
         RETURN NULL;
 
-    DECLARE @id_categoria INT;
+    DECLARE @id_categoria int;
 
     SELECT @id_categoria = id_categoria
     FROM subcategoria
@@ -241,11 +241,11 @@ END
 GO
 
 -- PROMEDIO GASTO
-CREATE OR ALTER FUNCTION fn_obtener_promedio_gasto_subcategoria (@id_usuario INT, @id_subcategoria INT, @cantidad_meses INT)
-RETURNS DECIMAL(12,2)
+CREATE OR ALTER FUNCTION fn_obtener_promedio_gasto_subcategoria (@id_usuario int, @id_subcategoria int, @cantidad_meses int)
+RETURNS decimal(12,2)
 AS
 BEGIN
-    DECLARE @promedio DECIMAL(12,2);
+    DECLARE @promedio decimal(12,2);
 
     IF NOT EXISTS (SELECT 1 FROM subcategoria WHERE id_subcategoria = @id_subcategoria)
         RETURN NULL;

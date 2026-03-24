@@ -3,10 +3,10 @@ GO
 
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_categoria
-	@p_nombre VARCHAR (300),
-	@p_descripcion VARCHAR (300),
-	@p_tipo_categoria VARCHAR (300),
-	@p_creado_por INT
+	@p_nombre varchar (300),
+	@p_descripcion varchar (300),
+	@p_tipo_categoria varchar (300),
+	@p_creado_por int
 	AS
 	BEGIN
     
@@ -22,10 +22,10 @@ GO
 
 -- ACTUALIZAR
 CREATE OR ALTER PROCEDURE sp_actualizar_categoria
-    @p_id_categoria INT,
-    @p_nombre VARCHAR(300),
-    @p_descripcion VARCHAR(300),
-    @p_modificado_por  INT
+    @p_id_categoria int,
+    @p_nombre varchar(300),
+    @p_descripcion varchar(300),
+    @p_modificado_por int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.categoria WHERE id_categoria = @p_id_categoria)
@@ -46,7 +46,7 @@ GO
 
 -- ELIMINAR
 CREATE OR ALTER PROCEDURE sp_eliminar_categoria
-    @p_id_categoria INT
+    @p_id_categoria int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.categoria WHERE id_categoria = @p_id_categoria)
@@ -76,7 +76,7 @@ GO
 
 -- CONSULTAR
 CREATE OR ALTER PROCEDURE sp_consultar_categoria
-	@p_id_categoria INT
+	@p_id_categoria int
 	AS
 	BEGIN
 		IF NOT EXISTS (SELECT 1 FROM dbo.categoria c WHERE c.id_categoria = @p_id_categoria)
@@ -92,8 +92,8 @@ GO
 
 -- LISTAR
 CREATE OR ALTER PROCEDURE sp_listar_categorias
-    @p_id_usuario INT,
-    @p_tipo_categoria VARCHAR(20)
+    @p_id_usuario int,
+    @p_tipo_categoria varchar(20)
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.usuario WHERE usuario_id = @p_id_usuario)
@@ -123,17 +123,23 @@ GO
 
 -- TRIGGER
 CREATE OR ALTER TRIGGER trg_subcategoria_defecto_por_categoria
-ON dbo.categoria
+ON categoria
 AFTER INSERT
 AS
 BEGIN
  
-    INSERT INTO dbo.subcategoria (id_categoria, nombre, descripcion, subcategoria_por_defecto,
+    INSERT INTO subcategoria (id_categoria, nombre, descripcion, subcategoria_por_defecto,
         es_activo, creado_por, modificado_por, creado_en, modificado_en)
 
     SELECT
-        i.id_categoria,'General','Subcategoría general creada automáticamente para ' + i.nombre,
-        1, 1, i.creado_por, i.creado_por, GETDATE(), GETDATE()
+        i.id_categoria,
+        'General','Subcategoría general creada automáticamente para ' + i.nombre,
+        1, 
+        1, 
+        i.creado_por, 
+        i.creado_por, 
+        GETDATE(), 
+        GETDATE()
     FROM inserted i;
     END
 GO
