@@ -10,23 +10,26 @@ CREATE OR ALTER PROCEDURE sp_crear_presupuesto_completo
     @p_anio_fin smallint,
     @p_mes_inicio tinyint,
     @p_mes_fin tinyint,
-    @p_lista_subcategoria_json nvarchar(MAX),
+    @p_lista_subcategoria_json nvarchar(max),
     @p_creado_por int
 AS
 BEGIN
 BEGIN TRY
     BEGIN TRANSACTION
 
-    EXEC sp_insertar_presupuesto
-        @p_id_usuario = @p_id_usuario,
-        @p_nombre_descriptivo = @p_nombre,
-        @p_descripcion = @p_descripcion,
-        @p_mes_inicio = @p_mes_inicio,
-        @p_mes_fin = @p_mes_fin,
-        @p_anio_inicio = @p_anio_inicio,
-        @p_anio_fin = @p_anio_fin
+    DECLARE @id_presupuesto int
 
-    DECLARE @id_presupuesto INT = SCOPE_IDENTITY()
+    -- Insertar directamente en lugar de llamar el SP
+    INSERT INTO dbo.presupuesto 
+        (usuario_id, estado_presupuesto, nombre_descriptivo, descripcion, 
+         anio_inicio, mes_inicio, anio_fin, mes_fin, 
+         fecha_hora_creacion, creado_por, modificado_por, creado_en)
+    VALUES 
+        (@p_id_usuario, 1, @p_nombre, @p_descripcion,
+         @p_anio_inicio, @p_mes_inicio, @p_anio_fin, @p_mes_fin,
+         GETDATE(), @p_id_usuario, @p_id_usuario, GETDATE())
+
+    SET @id_presupuesto = SCOPE_IDENTITY()
 
     INSERT INTO presupuesto_detalle (id_presupuesto, id_subcategoria, monto_mensual, creado_por, creado_en)
     SELECT 
@@ -37,18 +40,17 @@ BEGIN TRY
         GETDATE()
     FROM OPENJSON(@p_lista_subcategoria_json)
     WITH (
-        id_subcategoria INT,
-        monto_mensual   DECIMAL(12,2)
+        id_subcategoria int,
+        monto_mensual   decimal(12,2)
     )
 
     COMMIT TRANSACTION
-END TRY
-BEGIN CATCH
-    ROLLBACK TRANSACTION
-    DECLARE @msg NVARCHAR(2048) = ERROR_MESSAGE()
-    RAISERROR(@msg, 16, 1)
-END CATCH
-END
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        THROW
+    END CATCH
+    END
 GO
 -- REGISTRAR TRANSACCION
 CREATE OR ALTER PROCEDURE sp_registrar_transaccion_completa
@@ -88,7 +90,8 @@ CREATE OR ALTER PROCEDURE sp_registrar_transaccion_completa
         SELECT 1
         FROM presupuesto
         WHERE presupuesto_id = @p_id_presupuesto
-        AND @p_anio BETWEEN anio_inicio AND anio_fin
+            AND @p_anio BETWEEN anio_inicio 
+            AND anio_fin
     )
     BEGIN
         RAISERROR ('El anio no esta dentro del periodo del presupuesto.',16,1)
@@ -100,7 +103,7 @@ CREATE OR ALTER PROCEDURE sp_registrar_transaccion_completa
     SELECT @v_id_presupuesto_detalle = pd.id
     FROM presupuesto_detalle pd
     WHERE pd.id_presupuesto = @p_id_presupuesto
-    AND pd.id_subcategoria = @p_id_subcategoria
+        AND pd.id_subcategoria = @p_id_subcategoria
 
     IF @v_id_presupuesto_detalle IS NULL
     BEGIN

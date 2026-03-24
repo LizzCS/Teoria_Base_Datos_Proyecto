@@ -3,15 +3,15 @@ GO
 
 -- INSERTAR
 CREATE OR ALTER PROCEDURE sp_insertar_transaccion
-    @p_id_presupuesto_detalle INT,
-    @p_monto DECIMAL(12,2),
-    @p_metodo_pago VARCHAR(300),
-    @p_tipo_transaccion VARCHAR(300),
-    @p_fecha DATETIME,
-    @p_descripcion VARCHAR(300),
+    @p_id_presupuesto_detalle int,
+    @p_monto decimal(12,2),
+    @p_metodo_pago varchar(300),
+    @p_tipo_transaccion varchar(300),
+    @p_fecha datetime,
+    @p_descripcion varchar(300),
     @p_anio smallint,
     @p_mes tinyint,
-    @p_creado_por INT
+    @p_creado_por int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM presupuesto_detalle WHERE id = @p_id_presupuesto_detalle)
@@ -53,15 +53,15 @@ GO
 
 -- ACTUZALIZAR
 CREATE OR ALTER PROCEDURE sp_actualizar_transaccion
-    @p_id_transaccion INT,
-    @p_monto DECIMAL(12,2),
-    @p_metodo_pago VARCHAR(300),
-    @p_tipo_transaccion VARCHAR(300),
-    @p_fecha DATETIME,
-    @p_descripcion VARCHAR(300),
-    @p_anio INT,
-    @p_mes INT,
-    @p_modificado_por INT
+    @p_id_transaccion int,
+    @p_monto decimal(12,2),
+    @p_metodo_pago varchar(300),
+    @p_tipo_transaccion varchar(300),
+    @p_fecha datetime,
+    @p_descripcion varchar(300),
+    @p_anio int,
+    @p_mes int,
+    @p_modificado_por int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM transaccion WHERE id_transaccion = @p_id_transaccion)
@@ -109,7 +109,7 @@ GO
 
 -- ELIMINAR
 CREATE OR ALTER PROCEDURE sp_eliminar_transaccion
-    @p_id_transaccion INT
+    @p_id_transaccion int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM transaccion WHERE id_transaccion = @p_id_transaccion)
@@ -124,7 +124,7 @@ GO
 
 -- CONSULTAR
 CREATE OR ALTER PROCEDURE sp_consultar_transaccion
-    @p_id_transaccion INT
+    @p_id_transaccion int
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM transaccion WHERE id_transaccion = @p_id_transaccion)
@@ -154,10 +154,10 @@ GO
 
 --- LISTAR
 CREATE OR ALTER PROCEDURE sp_listar_transacciones_presupuesto
-    @p_id_presupuesto INT,
+    @p_id_presupuesto int,
     @p_anio smallint,
     @p_mes tinyint,
-    @p_tipo VARCHAR(300)
+    @p_tipo varchar(300)
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM presupuesto WHERE presupuesto_id = @p_id_presupuesto)
@@ -176,6 +176,7 @@ BEGIN
         t.id_transaccion,
         t.monto,
         t.tipo_transaccion,
+        t.descripcion,
         t.fecha_hora_registro,
         t.metodo_pago,
         t.anio_transaccion,
@@ -186,8 +187,7 @@ BEGIN
         ON t.id_presupuesto_detalle = pd.id
     WHERE pd.id_presupuesto = @p_id_presupuesto
       AND (@p_anio IS NULL OR t.anio_transaccion = @p_anio)
-      AND (@p_mes  IS NULL OR t.mes_transaccion  = @p_mes)
-      AND (@p_tipo IS NULL OR t.tipo_transaccion = @p_tipo)
-    ORDER BY t.fecha_hora_registro DESC;
-END
+      AND (@p_mes IS NULL OR t.mes_transaccion  = @p_mes)
+      AND (@p_tipo IS NULL OR t.tipo_transaccion = @p_tipo);
+    END
 GO
