@@ -57,9 +57,9 @@ namespace SistemaBancario.Repositories
             while (r.Read())
                 list.Add(new Categoria
                 {
-                    IdCategoria   = r.GetInt32(0),
-                    Nombre        = r.GetString(1),
-                    Descripcion   = r.IsDBNull(2) ? "" : r.GetString(2),
+                    IdCategoria = r.GetInt32(0),
+                    Nombre = r.GetString(1),
+                    Descripcion = r.IsDBNull(2) ? "" : r.GetString(2),
                     TipoCategoria = r.GetString(3)
                 });
             return list;

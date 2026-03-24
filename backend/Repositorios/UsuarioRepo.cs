@@ -11,20 +11,23 @@ namespace SistemaBancario.Repositories
         {
             using var conn = Conexion.GetConnection();
             conn.Open();
-            using var cmd = new SqlCommand(
-                "SELECT usuario_id, nombre, apellido, correo_electronico " +
-                "FROM usuario WHERE correo_electronico = @c AND contrasenia = @p AND estado_usuario = 1", conn);
-            cmd.Parameters.AddWithValue("@c", correo);
-            cmd.Parameters.AddWithValue("@p", contrasenia);
+
+            using var cmd = new SqlCommand("sp_login_usuario", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@correo", correo);
+            cmd.Parameters.AddWithValue("@contrasenia", contrasenia);
+
             using var r = cmd.ExecuteReader();
             if (r.Read())
             {
                 Session.IdUsuario = r.GetInt32(0);
                 Session.Nombre = r.GetString(1);
-                Session.Apellido  = r.GetString(2);
+                Session.Apellido = r.GetString(2);
                 Session.Correo = r.GetString(3);
                 return true;
             }
+
             return false;
         }
 
@@ -54,7 +57,7 @@ namespace SistemaBancario.Repositories
             cmd.Parameters.AddWithValue("@p_nombre", nombre);
             cmd.Parameters.AddWithValue("@p_apellido", apellido);
             cmd.Parameters.AddWithValue("@p_salario_mensual", salario);
-            cmd.Parameters.AddWithValue("@p_modificado_por",  Session.IdUsuario);
+            cmd.Parameters.AddWithValue("@p_modificado_por", Session.IdUsuario);
             cmd.ExecuteNonQuery();
         }
 
@@ -64,7 +67,7 @@ namespace SistemaBancario.Repositories
             conn.Open();
             using var cmd = new SqlCommand("sp_eliminar_usuario", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@p_id_usuario",     id);
+            cmd.Parameters.AddWithValue("@p_id_usuario", id);
             cmd.Parameters.AddWithValue("@p_modificado_por", Session.IdUsuario);
             cmd.ExecuteNonQuery();
         }

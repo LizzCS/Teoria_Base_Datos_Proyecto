@@ -12,9 +12,9 @@ namespace SistemaBancario
         public static void Cerrar()
         {
             IdUsuario = 0;
-            Nombre    = null;
-            Apellido  = null;
-            Correo    = null;
+            Nombre = null;
+            Apellido = null;
+            Correo = null;
         }
     }
 }

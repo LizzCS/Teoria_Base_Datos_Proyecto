@@ -102,16 +102,15 @@ namespace SistemaBancario.Repositories
             return list;
         }
 
-        // En ObligacionRepo
         public static void ProcesarObligacionesMes(int anio, int mes, int idPresupuesto)
         {
             using var conn = Conexion.GetConnection();
             conn.Open();
             using var cmd = new SqlCommand("sp_procesar_obligaciones_mes", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@p_id_usuario",     Session.IdUsuario);
-            cmd.Parameters.AddWithValue("@p_anio",           anio);
-            cmd.Parameters.AddWithValue("@p_mes",            mes);
+            cmd.Parameters.AddWithValue("@p_id_usuario", Session.IdUsuario);
+            cmd.Parameters.AddWithValue("@p_anio", anio);
+            cmd.Parameters.AddWithValue("@p_mes", mes);
             cmd.Parameters.AddWithValue("@p_id_presupuesto", idPresupuesto);
             using var r = cmd.ExecuteReader();
 

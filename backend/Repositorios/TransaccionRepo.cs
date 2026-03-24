@@ -8,7 +8,6 @@ namespace SistemaBancario.Repositories
 {
     public class TransaccionRepo
     {
-        // ── Insertar via SP completo (valida presupuesto, subcategoria, etc) ──
         public static void Insertar(int idPresupuesto, int idSubcategoria,
             string tipo, string descripcion, decimal monto, DateTime fecha,
             string metodoPago, int anio, int mes)
@@ -31,7 +30,6 @@ namespace SistemaBancario.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // ── Actualizar ────────────────────────────────────────────
         public static void Actualizar(int id, decimal monto, string metodoPago,
             string tipo, DateTime fecha, string descripcion, int anio, int mes)
         {
@@ -51,7 +49,6 @@ namespace SistemaBancario.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // ── Eliminar ──────────────────────────────────────────────
         public static void Eliminar(int id)
         {
             using var conn = Conexion.GetConnection();
@@ -62,7 +59,6 @@ namespace SistemaBancario.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // ── Consultar ─────────────────────────────────────────────
         public static void Consultar(int id)
         {
             using var conn = Conexion.GetConnection();
@@ -84,7 +80,6 @@ namespace SistemaBancario.Repositories
             UI.Separador();
         }
 
-        // ── Listar ────────────────────────────────────────────────
         public static List<Transaccion> Listar(int idPresupuesto,
             int? anio = null, int? mes = null, string tipo = null)
         {
@@ -113,9 +108,6 @@ namespace SistemaBancario.Repositories
             return list;
         }
 
-        // ── Funciones escalares relacionadas ──────────────────────
-
-        // Monto ejecutado de una subcategoria en un mes
         public static decimal FnMontoEjecutado(int idSubcategoria, int anio, int mes)
         {
             using var conn = Conexion.GetConnection();
@@ -129,7 +121,6 @@ namespace SistemaBancario.Repositories
             return r == DBNull.Value || r == null ? 0 : Convert.ToDecimal(r);
         }
 
-        // Porcentaje ejecutado de una subcategoria vs presupuesto
         public static decimal FnPorcentajeEjecutado(int idSubcategoria, int idPresupuesto, int anio, int mes)
         {
             using var conn = Conexion.GetConnection();
@@ -144,7 +135,6 @@ namespace SistemaBancario.Repositories
             return r == DBNull.Value || r == null ? 0 : Convert.ToDecimal(r);
         }
 
-        // Balance disponible (presupuestado - ejecutado)
         public static decimal FnBalanceSubcategoria(int idPresupuesto, int idSubcategoria, int anio, int mes)
         {
             using var conn = Conexion.GetConnection();
@@ -159,7 +149,6 @@ namespace SistemaBancario.Repositories
             return r == DBNull.Value || r == null ? 0 : Convert.ToDecimal(r);
         }
 
-        // Proyección de gasto al final del mes
         public static decimal FnProyeccionGasto(int idSubcategoria, int anio, int mes)
         {
             using var conn = Conexion.GetConnection();
@@ -173,7 +162,6 @@ namespace SistemaBancario.Repositories
             return r == DBNull.Value || r == null ? 0 : Convert.ToDecimal(r);
         }
 
-        // Promedio historico de gasto en una subcategoria
         public static decimal FnPromedioGasto(int idSubcategoria, int cantidadMeses)
         {
             using var conn = Conexion.GetConnection();
@@ -187,7 +175,6 @@ namespace SistemaBancario.Repositories
             return r == DBNull.Value || r == null ? 0 : Convert.ToDecimal(r);
         }
 
-        // Validar si una fecha está dentro del período del presupuesto
         public static bool FnValidarVigencia(DateTime fecha, int idPresupuesto)
         {
             using var conn = Conexion.GetConnection();

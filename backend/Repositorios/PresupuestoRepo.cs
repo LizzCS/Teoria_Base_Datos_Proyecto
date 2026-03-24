@@ -7,7 +7,6 @@ namespace SistemaBancario.Repositories
 {
     public class PresupuestoRepo
     {
-        // ── Crear presupuesto completo con detalles ───────────────
         public static void CrearCompleto(string nombre, string descripcion,
             int anioInicio, int anioFin, int mesInicio, int mesFin,
             string listaSubcategoriasJson)
@@ -28,7 +27,6 @@ namespace SistemaBancario.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // ── Actualizar ────────────────────────────────────────────
         public static void Actualizar(int id, string nombre, string descripcion,
             int mesInicio, int anioInicio, int mesFin, int anioFin)
         {
@@ -47,7 +45,6 @@ namespace SistemaBancario.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // ── Eliminar ──────────────────────────────────────────────
         public static void Eliminar(int id)
         {
             using var conn = Conexion.GetConnection();
@@ -58,7 +55,6 @@ namespace SistemaBancario.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // ── Consultar ─────────────────────────────────────────────
         public static Presupuesto? Consultar(int id)
         {
             using var conn = Conexion.GetConnection();
@@ -80,7 +76,6 @@ namespace SistemaBancario.Repositories
             };
         }
 
-        // ── Listar ────────────────────────────────────────────────
         public static List<Presupuesto> Listar()
         {
             var list = new List<Presupuesto>();
@@ -106,7 +101,6 @@ namespace SistemaBancario.Repositories
             return list;
         }
 
-        // ── Cerrar ────────────────────────────────────────────────
         public static void Cerrar(int id)
         {
             using var conn = Conexion.GetConnection();
@@ -118,7 +112,6 @@ namespace SistemaBancario.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // ── Calcular balance mensual ──────────────────────────────
         public static (decimal ingresos, decimal gastos, decimal ahorros, decimal balance)
             CalcularBalance(int idPresupuesto, int anio, int mes)
         {
@@ -146,7 +139,6 @@ namespace SistemaBancario.Repositories
             );
         }
 
-        // ── Calcular monto ejecutado ──────────────────────────────
         public static decimal CalcularMontoEjecutado(int idSubcategoria, int idPresupuesto, int anio, int mes)
         {
             using var conn = Conexion.GetConnection();
@@ -165,7 +157,6 @@ namespace SistemaBancario.Repositories
             return p.Value == DBNull.Value ? 0 : (decimal)p.Value;
         }
 
-        // ── Calcular porcentaje ejecución ─────────────────────────
         public static decimal CalcularPorcentaje(int idSubcategoria, int idPresupuesto, int anio, int mes)
         {
             using var conn = Conexion.GetConnection();
@@ -184,7 +175,6 @@ namespace SistemaBancario.Repositories
             return p.Value == DBNull.Value ? 0 : (decimal)p.Value;
         }
 
-        // ── Resumen categoría mes ─────────────────────────────────
         public static (decimal presupuestado, decimal ejecutado, decimal porcentaje)
             ResumenCategoriaMes(int idCategoria, int idPresupuesto, int anio, int mes)
         {
@@ -210,7 +200,6 @@ namespace SistemaBancario.Repositories
             );
         }
 
-        // ── Detalles ─────────────────────────────────────────────
         public static void InsertarDetalle(int idPresupuesto, int idSubcategoria,
             decimal monto, string observaciones)
         {
