@@ -73,41 +73,13 @@ Se implementaron procedimientos para:
 ---
 
 ## Estructura del Proyecto
-
-proyecto-presupuesto-personal/
-├── README.md                        # Descripción del proyecto
-│
-├── 📁 docs/                          # Documentación del proyecto
-│   ├── ModeloRelacional.pdf         # Modelo Relacional documentado
-│   ├── DiccionarioDatos.xlsx        # Diccionario de datos
-│   └── Reportes.pdf                 # Documentación de reportes con SQL
-│
-├── 📁 database/                      # Scripts de base de datos
-│   ├── DDL/
-│   │   └── 01_crear_tablas.sql
-│   ├── procedimientos/
-│   │   ├── crud_usuario.sql
-│   │   ├── crud_categoria.sql
-│   │   └── ... (otros procedimientos)
-│   ├── funciones/
-│   │   └── funciones.sql
-│   ├── triggers/
-│   │   └── triggers.sql
-│   └── datos_prueba/
-│       └── insertar_datos.sql
-│
-├── 📁 backend/                       # Código backend / API
-│   ├── src/
-│   ├── package.json (o equivalente)
-│   └── README.md
-│
-├── 📁 frontend/                      # Código frontend
-│   ├── src/
-│   ├── assets/
-│   └── README.md
-│
-└── 📁 metabase/                      # Configuración de Metabase
-    └── metabase_backup.zip
+Forms (UI)
+    ↓
+Services (Logica de negocio)
+    ↓
+Microsoft.Data.SqlClient (Driver)
+    ↓
+SQL Server
 
 ## Reportes (Metabase)
 El sistema genera 6 reportes obligatorios:  
