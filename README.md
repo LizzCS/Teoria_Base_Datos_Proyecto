@@ -74,10 +74,13 @@ Se implementaron procedimientos para:
 
 ## Estructura del Proyecto
 Forms (UI)
+
     ↓
 Services (Logica de negocio)
+
     ↓
 Microsoft.Data.SqlClient (Driver)
+
     ↓
 SQL Server
 
