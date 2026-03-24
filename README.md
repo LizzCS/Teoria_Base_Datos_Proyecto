@@ -1,9 +1,10 @@
 # Sistema de Presupuesto Mensual Personal
 
+`Teoria Base de Datos 1: Proyecto Final
+Cristina Sabillón - 22351004`
+
 ## Descripción
 El **Sistema de Presupuesto Mensual Personal** permite a los usuarios planificar, controlar y analizar sus finanzas personales de manera eficiente. Gestiona **ingresos**, **gastos**, **obligaciones financieras** y **metas de ahorro**, generando reportes analíticos para la toma de decisiones.
-
----
 
 ## Tecnologías utilizadas
 - **Base de datos:** Microsoft SQL Server  
@@ -86,6 +87,26 @@ El sistema incluye las siguientes entidades:
 - Balance mensual variado para simular escenarios financieros reales.  
 
 ---
+## Modulos del Sistema
+| Modulo                                     | Funcionalidad                                                    |
+| ------------------------------------------ | -----------------------------------------------------------------|
+| `Login / Registro`   | Deja al usuario crear o utilizar una cuenta para ingresar al programa                  |
+| `Presupuesto`        | CRUD presupuesto y presupuesto detalle + Procedimientos de Logica para los balances    |
+| `Obligacion Fija`    | CRUD obligacion + funcion de estar vigente                                             |
+| `Transaccion`        | CRUD + procedimiento de transaccion completa                                           |
+| `Categorias`         | CRUD categoria y subcategoria                                                          |
+| `Reportes`           | 6 reportes para exportar a pdf                                                         |
+| `Usuario`            | CRUD usuario para ver y editar usuarios                                                |
+| `Menu Principal`     | Menu para poder acceder al resto de menus                                              |
+
+---
+
+## DATOS DE PRUEBA
+Para la prueba se utilizo :
+`Correo Electronico : mizi.till@email.com`
+`Contraseña: 1234`
+
+---
 
 ## Estructura del Proyecto
 
@@ -95,7 +116,7 @@ El sistema incluye las siguientes entidades:
     ↓
     CAPA DE DATOS (Base de Datos)
 
-## Reportes (Metabase)
+## Reportes 
 El sistema genera 6 reportes obligatorios:  
 1. **Resumen Mensual Ingresos vs Gastos vs Ahorros**  
 2. **Distribución de Gastos por Categoría**  
@@ -105,5 +126,31 @@ El sistema genera 6 reportes obligatorios:
 6. **Progreso de Metas de Ahorro**  
 
 Todos los reportes se pueden exportar a PDF.
+---
 
-## NOTA: SE UTILIZO IA PARA LAS PARTES VISUALES DEL PROGRAMA.
+## REFLEXION SOBRE EL PROCESO DEL PROYECTO
+El desarollo del proyecto me ayudo a poder entender de mejor manera como se realizan las bases de datos al igual de la importancia de tener una base de datos bien estructurada.
+
+---
+
+## Diseño de la Base de Datos
+El diseño de la base de datos se puede encontrar en el archivo docs donde se hallara el dbml.
+
+---
+
+## Desafios enfentrados y Soluciones
+Los desafios que encontre fue en la realizacion del presupeusto completo con el uso del json, que se me realizo algo dificil saber como tener que manerjarlo, tambien diria que el sintaxis a veces se me hacia dificultad gracias al hecho de que el sintaxis es muy diferente a sintaxis de los lenguajes de programacion a los cuales estaba acostumbrada.
+
+---
+
+## Aprendizaje Clave
+EL aprendizaje clave fue el manejo de base de datos, aprendiendo a crear y como utilizar funciones, procedimientos y triggers, al igual que funciones especiales como crosstab, funciones de ventana y la realizacion de validaciones dentro de una base de datos.
+
+---
+
+## Sugerencia de mejoras del Proyecto
+Recomendaria mejorar lo visual, en ves de consola talvez utilizar gui y en la parte de reportes mejor utilizar otro paquete para realizar la exportacion y creacion de graficos a pdf.
+
+---
+
+### #NOTA: Se utilizo IA en la parte visual del programa, al igual que en la parte visual de los pdfs y la generacion de datos de prueba.
