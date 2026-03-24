@@ -102,7 +102,7 @@ BEGIN
         RETURN;
     END
  
-    SELECT DISTINCT
+    SELECT
         c.id_categoria,
         c.nombre AS nombre_categoria,
         c.descripcion,
@@ -117,6 +117,21 @@ BEGIN
         ON pd.id_presupuesto = p.presupuesto_id
     WHERE p.usuario_id    = @p_id_usuario
       AND c.tipo_categoria = @p_tipo_categoria 
+    ORDER BY c.nombre;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_listar_categorias_general
+    @p_tipo_categoria varchar(20)
+AS
+BEGIN
+    SELECT
+        c.id_categoria,
+        c.nombre AS nombre_categoria,
+        c.descripcion,
+        c.tipo_categoria
+    FROM dbo.categoria c
+    WHERE c.tipo_categoria = @p_tipo_categoria
     ORDER BY c.nombre;
 END
 GO
