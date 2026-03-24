@@ -72,16 +72,17 @@ Se implementaron procedimientos para:
 
 ---
 
-## Arquitectura del Sistema
+## Estructura del Proyecto
+
 proyecto-presupuesto-personal/
 ├── README.md                        # Descripción del proyecto
 │
-├── 📁 docs/
+├── 📁 docs/                          # Documentación del proyecto
 │   ├── ModeloRelacional.pdf         # Modelo Relacional documentado
-│   ├── ArchivoSQL.sql               # Diccionario de datos
+│   ├── DiccionarioDatos.xlsx        # Diccionario de datos
 │   └── Reportes.pdf                 # Documentación de reportes con SQL
 │
-├── 📁 database/
+├── 📁 database/                      # Scripts de base de datos
 │   ├── DDL/
 │   │   └── 01_crear_tablas.sql
 │   ├── procedimientos/
@@ -95,17 +96,17 @@ proyecto-presupuesto-personal/
 │   └── datos_prueba/
 │       └── insertar_datos.sql
 │
-├── 📁 backend/
+├── 📁 backend/                       # Código backend / API
 │   ├── src/
 │   ├── package.json (o equivalente)
 │   └── README.md
 │
-├── 📁 frontend/
+├── 📁 frontend/                      # Código frontend
 │   ├── src/
 │   ├── assets/
 │   └── README.md
 │
-└── 📁 metabase/
+└── 📁 metabase/                      # Configuración de Metabase
     └── metabase_backup.zip
 
 ## Reportes (Metabase)
